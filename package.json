@@ -1,0 +1,19 @@
+{
+  "name": "ushop",
+  "version": "1.0.0",
+  "description": "Major Project App",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fatdog2/uShop.git"
+  },
+  "author": "Sam Argy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Fatdog2/uShop/issues"
+  },
+  "homepage": "https://github.com/Fatdog2/uShop#readme"
+}
