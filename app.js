@@ -19,7 +19,12 @@ var path = require('path');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-//Rendering home Page
+//Rendering Home Page
 app.get('/', function(req, res) {
     res.render('home');
+});
+
+//Rendering User Create Acc Page
+app.get('/userCreateAcc', function(req, res) {
+    res.render('userCreateAcc')
 });

@@ -1,0 +1,62 @@
+extends presignin-layout
+
+block content
+    div(class="custom-container" style="margin-left: 1rem")
+        h1(class="position-relative " style="top: 1rem") Create an Account
+        div(class="row")
+            h4(class= "font-weight-light col-lg-4" style="top: 2rem") Personal Details
+            h4(class="font-weight-light col-md-4" style="top: 2rem; margin-left: -0.3rem; ") Account Details
+        br
+        br
+        form(action="/userCreateAcc" method="POST")
+            div(class="form-row")
+                div(class="form-group col-lg-4")
+                    label(for="inputGivenN") Given Name
+                    input(style="width: 85%" type="text" class="form-control" id="inputGivenN" placeholder="Given Name")
+                div(class="form-group col-lg-4")
+                    label(for="inputEmail") Email
+                    input(style="width: 85%" type="email" class="form-control" id="inputEmail" placeholder="example@uShop.com")
+            div(class="form-row")
+                div(class="form-group col-lg-4")
+                    label(for="inputLastN") Last Name
+                    input(style="width: 85%" type="text" class="form-control" id="inputLastN" placeholder="Last Name")
+                div(class="form-group col-lg-4")
+                    label(for="inputReEmail") Re-enter Email
+                    input(style="width: 85%" type="email" class="form-control" id="inputReEmail" placeholder="example@uShop.com")
+            div(class="form-row")
+                div(class="form-group col-lg-4")
+                    label(for="inputAddress") Address
+                    input(style="width: 85%" type="text" class="form-control" id="inputAddress" placeholder="e.g 123 Fake St, Fakeville")
+                div(class="form-group col-lg-4")
+                    label(for="inputPassword") Password 
+                        i (Minimum 7 Characters)
+                    input(style="width: 85%" type="password" class="form-control" id="inputPassword" placeholder="Password")
+            div(class="form-row")
+                    div(class="form-group col-lg-2")
+                        label(for="inputPostcode") Postcode 
+                        input(id="inputPostcode" type="text" class="form-control" maxlength=4 minlength=4)
+                    div(class="form-group col-lg-2")
+                        label(for="inputState") State
+                        select(style="width: 68%" id="inputState" class="form-control")
+                            option(value="NSW") NSW
+                            option(value="VIC") VIC
+                            option(value="WA") WA
+                            option(value="SA") SA
+                            option(value="QLD") QLD
+                            option(value="TAS") TAS
+                            option(value="TAS") ACT
+                    div(class="form-group col-lg-4")
+                        label(for="inputRePassword") Re-enter Password 
+                        input(style="width: 85%" type="password" class="form-control" id="inputRePassword" placeholder="Password")   
+            div(class="form-row")
+                div(class="form-group col-lg-4")
+                    label(for="inputDOB") Date of Birth
+                    input(style="width:48.5%" type="date" id="inputDOB" class="form-control")
+            div(class="form-row")
+                div(class="form-group col-lg-4")
+                    label(for="inputMobile") Mobile Number 
+                        i (10 digit)
+                    input(style="width:85%" type="text" id="inputMobile" class="form-control" minlength=10 maxlength=10 placeholder="0439974601")
+                div(class="form-group col-lg-3")
+                    input(style="position: relative; height: 60px; width: 350px; background-color: #1D3557; color: white; border-radius: 10px; font-size: 190%; top: -60px" type="submit" value="Create Account")
+                

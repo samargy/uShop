@@ -1,1 +1,12 @@
-h1 Hello World
+extends presignin-layout
+
+block content
+    br
+    br
+    h1(class="display-4 text-center") Welcome to uShop
+    h5(class="display-10 text-center") Choose one of the options below to create an account
+    a(href="/userCreateAcc" class="btn col offset-2" style="height:175px; width: 300px; margin-top: 6.5rem; background-color: #1D3557; color: white; border-radius: 50px; border-color: #009FFD; border-width: thick")
+        div(class="position-relative" style="font-size:300%; top:25%;") User
+    a(href="/shopCreateAcc" class="btn col" style="height:175px; width: 300px; margin-top: 6.5rem; margin-left: 15rem; background-color: #1D3557; color: white; border-radius: 50px; border-color: #009FFD; border-width: thick")
+        div(class="position-relative" style="font-size:300%; top:25%;") Shop
+
