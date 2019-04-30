@@ -12,32 +12,32 @@ block content
             div(class="form-row")
                 div(class="form-group col-lg-4")
                     label(for="inputGivenN") Given Name
-                    input(style="width: 85%" type="text" class="form-control" id="inputGivenN" placeholder="Given Name")
+                    input(name="givenName" style="width: 85%" type="text" class="form-control" id="inputGivenN" placeholder="Given Name")
                 div(class="form-group col-lg-4")
                     label(for="inputEmail") Email
-                    input(style="width: 85%" type="email" class="form-control" id="inputEmail" placeholder="example@uShop.com")
+                    input(name="email" style="width: 85%" type="email" class="form-control" id="inputEmail" placeholder="example@uShop.com")
             div(class="form-row")
                 div(class="form-group col-lg-4")
                     label(for="inputLastN") Last Name
-                    input(style="width: 85%" type="text" class="form-control" id="inputLastN" placeholder="Last Name")
+                    input(name="lastName" style="width: 85%" type="text" class="form-control" id="inputLastN" placeholder="Last Name")
                 div(class="form-group col-lg-4")
                     label(for="inputReEmail") Re-enter Email
-                    input(style="width: 85%" type="email" class="form-control" id="inputReEmail" placeholder="example@uShop.com")
+                    input(name="reEmail" style="width: 85%" type="email" class="form-control" id="inputReEmail" placeholder="example@uShop.com")
             div(class="form-row")
                 div(class="form-group col-lg-4")
                     label(for="inputAddress") Address
-                    input(style="width: 85%" type="text" class="form-control" id="inputAddress" placeholder="e.g 123 Fake St, Fakeville")
+                    input(name="address" style="width: 85%" type="text" class="form-control" id="inputAddress" placeholder="e.g 123 Fake St, Fakeville")
                 div(class="form-group col-lg-4")
                     label(for="inputPassword") Password 
                         i (Minimum 7 Characters)
-                    input(style="width: 85%" type="password" class="form-control" id="inputPassword" placeholder="Password")
+                    input(name="password" style="width: 85%" type="password" class="form-control" id="inputPassword" placeholder="Password")
             div(class="form-row")
                     div(class="form-group col-lg-2")
                         label(for="inputPostcode") Postcode 
-                        input(id="inputPostcode" type="text" class="form-control" maxlength=4 minlength=4)
+                        input(name="postcode" style="width:80%" id="inputPostcode" type="text" class="form-control" maxlength=4 minlength=4)
                     div(class="form-group col-lg-2")
                         label(for="inputState") State
-                        select(style="width: 68%" id="inputState" class="form-control")
+                        select(name="state" style="width: 68%" id="inputState" class="form-control")
                             option(value="NSW") NSW
                             option(value="VIC") VIC
                             option(value="WA") WA
@@ -47,16 +47,21 @@ block content
                             option(value="TAS") ACT
                     div(class="form-group col-lg-4")
                         label(for="inputRePassword") Re-enter Password 
-                        input(style="width: 85%" type="password" class="form-control" id="inputRePassword" placeholder="Password")   
+                        input(name="rePassword" style="width: 85%" type="password" class="form-control" id="inputRePassword" placeholder="Password")   
             div(class="form-row")
                 div(class="form-group col-lg-4")
                     label(for="inputDOB") Date of Birth
-                    input(style="width:48.5%" type="date" id="inputDOB" class="form-control")
+                    input(name="dob" style="width:48.5%" type="date" id="inputDOB" class="form-control")
             div(class="form-row")
                 div(class="form-group col-lg-4")
                     label(for="inputMobile") Mobile Number 
                         i (10 digit)
-                    input(style="width:85%" type="text" id="inputMobile" class="form-control" minlength=10 maxlength=10 placeholder="0439974601")
+                    input(name="mobileNumber" style="width:85%" type="text" id="inputMobile" class="form-control" minlength=10 maxlength=10 placeholder="0439974601")
                 div(class="form-group col-lg-3")
-                    input(style="position: relative; height: 60px; width: 350px; background-color: #1D3557; color: white; border-radius: 10px; font-size: 190%; top: -60px" type="submit" value="Create Account")
-                
+                    input(style="position: relative; height: 60px; width: 350px; background-color: #1D3557; color: white; border-radius: 10px; font-size: 190%; top: -60px" type="submit" value="Create Account" id="submit")
+        div(style="left: 400px; top: -400px" class="container text-center position-relative") 
+            h3 Wanted to create a
+            h3 shop instead?
+            a(href="/createShopAcc" class="font-weight-light") Click Here
+
+    script(src="/js/validation.js")
