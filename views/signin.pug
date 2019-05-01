@@ -10,9 +10,12 @@ html
     body
         nav(class="navbar navbar-expand-md navbar-dark bg-dark sticky-top") 
             a(class="navbar-text" style="font-size:175%; color:white; padding:0px" href="/") uShop.com
-            span(class="navbar-text position-absolute" style="right:50px; padding:0px" href="")
-                a(style="font-size:120%; color:white" href="/signin") 
-                    u Sign In
-
-        block content
-        //Linking Bootstrap scripts + jquery
+        h1(class="display-2 text-center position-relative" style="top: 3rem; font-size: 400%") Login
+        form(action="/signin" method="POST")
+            div(class="form-row position-relative" style="top:7rem")
+                label(class="col-lg-4 col-form-label position-relative text-right" for="inputEmail" style="font-size: 150%; top:-5px; left: -5px;") Email:
+                input(class="form-control col-lg-4" type="text" name="email" id="inputEmail")
+            br
+            div(class="form-row position-relative" style="top:7rem")
+                label(class="col-lg-4 col-form-label position-relative text-right" for="inputEmail" style="font-size: 150%; top:-5px; left: -5px;") Email:
+                input(class="form-control col-lg-4" type="text" name="email" id="inputEmail")

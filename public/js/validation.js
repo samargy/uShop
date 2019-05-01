@@ -1,23 +1,12 @@
-// $('#submit').click(function() {
 
-//     if(($('#inputEmail').val() !== $('#inputReEmail').val() ) || 
-//         ($('#inputPassword').val() !== $('#inputRePassword').val()
-//     )) {
-//     alert("Please Enter matching email and password")
-// }
-// else {
-//         $.ajax({
-//             url: "/userCreateAcc",
-//             data: {
-//                 text: $("#inputGivenN")
-//             },
-//             dataType: 'json',
-//             method: "POST",
-//                 success: function(res) {
-//                 alert('hi')
-//             },
-//             content-type: 
-//         })
-// }
+function validateForm() {
+let email = document.getElementById('inputEmail').value;
+let reEmail = document.getElementById('inputReEmail').value;
 
-// })
+console.log('hello')
+if(email !== reEmail) {
+    alert("Your email doesn't match")
+    return false;
+}
+
+}
