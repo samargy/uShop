@@ -59,6 +59,7 @@ app.get('/shopCreateAcc', function(req, res) {
 const User = require('./models/userModel')
 app.post('/userCreateAcc', function(req,res) {
 
+    console.log('recieved post')
     //Creating the User
     let user = new User();
     let data = req.body;
