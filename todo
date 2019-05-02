@@ -1,0 +1,10 @@
+
+
+TODO LIST / things i cant get to work :(
+
+1. When Create account is clicked check whether email + password has
+been entered twice correctly. 
+Then check whether a document with that email exists in the database
+already.
+If either of these two conditions occur, relay info back to user,
+do not create the acc.
