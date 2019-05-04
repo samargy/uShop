@@ -7,7 +7,7 @@ var shopSchema = new Schema ({
     email: String,
     password: String,
     sales: Object,
-    inventory: Object,
+    inventory: Array,
 });
 
 
