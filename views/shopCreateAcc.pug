@@ -1,5 +1,6 @@
 extends presignin-layout
 
+
 block content
     div(class="custom-container" style="margin-left: 1rem")
         h1(class="position-relative " style="top: 1rem") Create a Shop
@@ -40,7 +41,7 @@ block content
                     label(for="inputReEmail") Re-enter Email
                     input(name="reEmail" style="width: 85%" type="email" class="form-control" id="inputReEmail" placeholder="example@uShop.com")
             div(class="form-row" id="row3")
-                div(class="form-group col-lg-4" )
+                div(class="form-group col-lg-4" id="addButton")
                     img(src="/images/plus_button.png" style="width: 5%;" id="addButton")
                     a(style="left: 1rem" class="position-relative") Add New Category
                 div(class="form-group col-lg-4" id="passwordGroup1")
@@ -48,14 +49,16 @@ block content
                         i (Minimum 7 Characters)
                     input(name="password" style="width: 85%" type="password" class="form-control" id="inputPassword" placeholder="Password")
             div(class="form-row" id="row4")
-                div(class="form-group col-lg-4")
-                div(class="form-group col-lg-4" id="passwordGroup2")
+                div(class="form-group col-lg-4 offset-md-4" id="passwordGroup2")
                         label(for="inputRePassword") Re-enter Password 
                         input(name="rePassword" style="width: 85%" type="password" class="form-control" id="inputRePassword" placeholder="Password")
             div(class="form-row" id="row5")
                 div(class="form-group col-lg-4")
                 div(class="form-group col-lg-4")
                     input(style="position: relative; height: 60px; width: 350px; background-color: #1D3557; color: white; border-radius: 10px; font-size: 190%; top: 1rem " type="submit" value="Create Shop" id="submit")
+            div(hidden) 
+                div(class="form-group")
+                    input(name="categoryCount" id="categoryCount" value="1" readonly) 
         div(style="left: 400px; top: -300px" class="container text-center position-relative") 
             h3 Wanted to become a
             h3 user instead?
