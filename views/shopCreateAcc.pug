@@ -14,12 +14,16 @@ block content
                 div(class="form-group col-lg-4")
                     label(for="inputName") Shop Name 
                         i (Must be unique)
-                    input(name="name" style="width: 85%" type="text" class="form-control" id="inputName" placeholder="Given Name")
+                    input(name="name" style="width: 85%" type="text" class="form-control" id="inputName" placeholder="Your Shop Name")
+                    if (resultType === 'name')
+                        div(class="customValidation") The shop name you've entered already exists
                 div(class="form-group col-lg-4" id="emailGroup1")
                     label(for="inputEmail") Email
                     input(name="email" style="width: 85%" type="email" class="form-control" id="inputEmail" placeholder="example@uShop.com")
                     if (field === 'email') || (field === 'email+password')
                         div(class="customValidation") Please enter a matching email
+                    if (resultType === 'email')
+                        div(class="customValidation") The email you've entered already exists
             div(class="form-row" id="row2")
                 div(class="form-group col-lg-4")
                     label(for="inputCategory1") Shop Category 
@@ -44,6 +48,8 @@ block content
                     input(name="reEmail" style="width: 85%" type="email" class="form-control" id="inputReEmail" placeholder="example@uShop.com")
                     if (field === 'email') || (field === 'email+password')
                         div(class="customValidation") Please enter a matching email
+                    if (resultType === 'email')
+                        div(class="customValidation") The email you've entered already exists
             div(class="form-row" id="row3")
                 div(class="form-group col-lg-4" id="addButton")
                     img(src="/images/plus_button.png" style="width: 5%;" id="addButton")

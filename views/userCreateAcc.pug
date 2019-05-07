@@ -19,6 +19,8 @@ block content
                     input(name="email" style="width: 85%" type="email" class="form-control" id="inputEmail" placeholder="example@uShop.com")
                     if (field === 'email') || (field === 'email+password')
                         div(class="customValidation") Please enter a matching email
+                    if (exist == true)
+                        div(class="customValidation") The email you've entered already exists
             div(class="form-row")
                 div(class="form-group col-lg-4")
                     label(for="inputLastN") Last Name
@@ -28,6 +30,8 @@ block content
                     input(name="reEmail" style="width: 85%" type="email" class="form-control" id="inputReEmail" placeholder="example@uShop.com")
                     if (field === 'email') || (field === 'email+password')
                         div(class="customValidation") Please enter a matching email
+                    if (exist == true)
+                        div(class="customValidation") The email you've entered already exists
             div(class="form-row")
                 div(class="form-group col-lg-4")
                     label(for="inputAddress") Address

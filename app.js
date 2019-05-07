@@ -46,7 +46,7 @@ app.get('/', function(req, res) {
 });
 
 //Rendering User Create Acc Page
-app.get('/userCreateAcc', function(req, res) {
+app.get('/userCreateAcc/', function(req, res) {
     res.render('userCreateAcc')
 });
 
@@ -54,6 +54,13 @@ app.get('/userCreateAcc', function(req, res) {
 app.get('/userCreateAcc/noMatch/:field', function(req, res) {
     res.render('userCreateAcc', {
         field: req.params.field
+    })
+});
+
+//Rendering Page if email already exists
+app.get('/userCreateAcc/alreadyExist', function(req, res) {
+    res.render('userCreateAcc', {
+        exist: true
     })
 });
 
@@ -68,13 +75,20 @@ app.get('/shopCreateAcc/noMatch/:field', function(req, res) {
     })
 });
 
+app.get('/shopCreateAcc/alreadyExist/:resultType', function(req, res){
+    res.render('shopCreateAcc', {
+        resultType: req.params.resultType
+    })
+})
+
 
 //Proccessing a Create User Acc Post Request
 const User = require('./models/userModel')
-app.post('/userCreateAcc', function(req,res) {
+app.post('/userCreateAcc', async function(req,res) {
 
     const data = req.body;
-
+    //Searches if user with email already exists
+    const userResult = await User.findOne({email: data.email})
     //Data validation
     if(data.email !== data.reEmail) {
         if(data.password !== data.rePassword) {
@@ -87,7 +101,9 @@ app.post('/userCreateAcc', function(req,res) {
     else if(data.password !== data.rePassword) {
         return res.redirect('userCreateAcc/noMatch/password')
     }
-
+    else if(userResult){
+        return res.redirect('userCreateAcc/alreadyExist')
+    }
 
 
     else {
@@ -109,6 +125,7 @@ app.post('/userCreateAcc', function(req,res) {
             console.log(err)
             return;
         } else {
+            //Log the user has been created and direct to sign in page
             console.log("User created ---> "+user.givenName+" "+user.lastName)
             res.redirect('/signin')
         }
@@ -117,14 +134,18 @@ app.post('/userCreateAcc', function(req,res) {
     }
 });
 
-//Proccessing a Create User Acc Post Request
+//Proccessing a Create Shop Acc Post Request
 const Shop = require('./models/shopModel')
-app.post('/shopCreateAcc', function(req,res) {
+app.post('/shopCreateAcc', async function(req,res) {
 
-    
-    //Creating the User
-    let shop = new Shop();
+
+    //making req.body a single variable - ease of use
     const data = req.body
+
+    //Searching for Shop with same name and storing in variable
+    const shopNameResult = await Shop.findOne({name: data.name});
+    //Searching for Shop with same email and storing in variable
+    const shopEmailResult = await Shop.findOne({email: data.email})
     
     //Data Validation
     if(data.email !== data.reEmail) {
@@ -136,9 +157,21 @@ app.post('/shopCreateAcc', function(req,res) {
     return res.redirect('shopCreateAcc/noMatch/email')
     }
     else if(data.password !== data.rePassword) {
+        //Tell the user they need to have matching password
         return res.redirect('shopCreateAcc/noMatch/password')
     }
+    else if (shopNameResult) {
+        //Tell the user a shop with that name already exists
+        return res.redirect('shopCreateAcc/alreadyExist/name')
+    }
+    else if (shopEmailResult) {
+        //Tell the user a shop with that email already exists
+        return res.redirect('shopCreateAcc/alreadyExist/email')
+    }
     else {
+
+    //Creating the User
+    let shop = new Shop();
 
     //Adding the categories to the categories array.
     switch(Number(data.categoryCount)){
@@ -226,11 +259,16 @@ app.post('/signin', async function(req, res) {
 
 //Rendering the Shop home page (shop view)
 app.get('/:id/shophome', async function(req, res) {
+
+    //Setting the id as a variable
     const id = req.params.id
+    //Searching for the shop and setting it as a variable
     const shop = await Shop.findById(id);
     console.log(shop)
+
     res.render('shopHome', {
-        shop: shop
+        shop: shop,
+        categoryCount: shop.categories.length
     });
 });
 
