@@ -1,4 +1,9 @@
 extends shop-layout
 
 block content 
-    p hi
+    div(class="custom-container" style="margin-left: 1rem")
+        div(class="row")
+            h4(class= "font-weight-light col-lg-4" style="top: 2rem") Shop Details
+        br
+        br
+        form(action="/"+shop._id+"/shopEditAcc" method="POST")

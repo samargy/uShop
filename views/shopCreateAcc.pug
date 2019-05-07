@@ -5,7 +5,7 @@ block content
     div(class="custom-container" style="margin-left: 1rem")
         h1(class="position-relative " style="top: 1rem") Create a Shop
         div(class="row")
-                h4(class= "font-weight-light col-lg-4" style="top: 2rem") Shop Details
+                h4(class= "font-weight-light col-md-4" style="top: 2rem") Shop Details
                 h4(class="font-weight-light col-md-4" style="top: 2rem; margin-left: -0.3rem; ") Account Details
         br
         br
@@ -18,6 +18,8 @@ block content
                 div(class="form-group col-lg-4" id="emailGroup1")
                     label(for="inputEmail") Email
                     input(name="email" style="width: 85%" type="email" class="form-control" id="inputEmail" placeholder="example@uShop.com")
+                    if (field === 'email') || (field === 'email+password')
+                        div(class="customValidation") Please enter a matching email
             div(class="form-row" id="row2")
                 div(class="form-group col-lg-4")
                     label(for="inputCategory1") Shop Category 
@@ -40,6 +42,8 @@ block content
                 div(class="form-group col-lg-4" id="emailGroup2")
                     label(for="inputReEmail") Re-enter Email
                     input(name="reEmail" style="width: 85%" type="email" class="form-control" id="inputReEmail" placeholder="example@uShop.com")
+                    if (field === 'email') || (field === 'email+password')
+                        div(class="customValidation") Please enter a matching email
             div(class="form-row" id="row3")
                 div(class="form-group col-lg-4" id="addButton")
                     img(src="/images/plus_button.png" style="width: 5%;" id="addButton")
@@ -48,10 +52,14 @@ block content
                     label(for="inputPassword") Password 
                         i (Minimum 7 Characters)
                     input(name="password" style="width: 85%" type="password" class="form-control" id="inputPassword" placeholder="Password")
+                    if (field === 'password') || (field === 'email+password')
+                        div(class="customValidation") Please enter a matching password
             div(class="form-row" id="row4")
                 div(class="form-group col-lg-4 offset-md-4" id="passwordGroup2")
                         label(for="inputRePassword") Re-enter Password 
                         input(name="rePassword" style="width: 85%" type="password" class="form-control" id="inputRePassword" placeholder="Password")
+                        if (field === 'password') || (field === 'email+password')
+                            div(class="customValidation") Please enter a matching password
             div(class="form-row" id="row5")
                 div(class="form-group col-lg-4")
                 div(class="form-group col-lg-4")

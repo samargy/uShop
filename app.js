@@ -52,7 +52,6 @@ app.get('/userCreateAcc', function(req, res) {
 
 //Rendering User Acc Page with errors
 app.get('/userCreateAcc/noMatch/:field', function(req, res) {
-    console.log(req.params.field)
     res.render('userCreateAcc', {
         field: req.params.field
     })
@@ -61,6 +60,12 @@ app.get('/userCreateAcc/noMatch/:field', function(req, res) {
 //Rendering Shop Create Acc Page
 app.get('/shopCreateAcc', function(req, res) {
     res.render('shopCreateAcc')
+});
+
+app.get('/shopCreateAcc/noMatch/:field', function(req, res) {
+    res.render('shopCreateAcc', {
+        field: req.params.field
+    })
 });
 
 
@@ -86,7 +91,6 @@ app.post('/userCreateAcc', function(req,res) {
 
 
     else {
-    console.log("User created ---> "+data.givenName+" "+data.lastName)
     //Creating the User
     let user = new User();
     user.givenName = data.givenName;
@@ -105,6 +109,7 @@ app.post('/userCreateAcc', function(req,res) {
             console.log(err)
             return;
         } else {
+            console.log("User created ---> "+user.givenName+" "+user.lastName)
             res.redirect('/signin')
         }
         
@@ -119,9 +124,21 @@ app.post('/shopCreateAcc', function(req,res) {
     
     //Creating the User
     let shop = new Shop();
-    let data = req.body;
-    console.log(data)
+    const data = req.body
     
+    //Data Validation
+    if(data.email !== data.reEmail) {
+        if(data.password !== data.rePassword) {
+            //Tell user they need to have matching email and password
+            return res.redirect('shopCreateAcc/noMatch/email+password')
+        }
+    //Tell user they need to have matching email
+    return res.redirect('shopCreateAcc/noMatch/email')
+    }
+    else if(data.password !== data.rePassword) {
+        return res.redirect('shopCreateAcc/noMatch/password')
+    }
+    else {
 
     //Adding the categories to the categories array.
     switch(Number(data.categoryCount)){
@@ -159,10 +176,12 @@ app.post('/shopCreateAcc', function(req,res) {
             console.log(err)
             return;
         } else {
+            console.log("Shop created ---> "+shop.name)
             res.redirect('/signin')
         }
         
     })
+}
 });
 
 //Rendering Signin Page
@@ -206,9 +225,12 @@ app.post('/signin', async function(req, res) {
 });
 
 //Rendering the Shop home page (shop view)
-app.get('/:id/shophome', function(req, res) {
+app.get('/:id/shophome', async function(req, res) {
+    const id = req.params.id
+    const shop = await Shop.findById(id);
+    console.log(shop)
     res.render('shopHome', {
-        id: req.params.id
+        shop: shop
     });
 });
 
