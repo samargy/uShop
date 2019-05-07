@@ -27,7 +27,7 @@ db.on('error', function(err) {
 })
 
 
-//Starting App (on localhost:3000/)
+//Starting App (on localhost:3000)
 app.listen(port, function() {
     console.log('Server started on port ' + port);
 });
@@ -50,35 +50,43 @@ app.get('/userCreateAcc', function(req, res) {
     res.render('userCreateAcc')
 });
 
+//Rendering User Acc Page with errors
+app.get('/userCreateAcc/noMatch/:field', function(req, res) {
+    console.log(req.params.field)
+    res.render('userCreateAcc', {
+        field: req.params.field
+    })
+});
+
 //Rendering Shop Create Acc Page
 app.get('/shopCreateAcc', function(req, res) {
     res.render('shopCreateAcc')
 });
 
+
 //Proccessing a Create User Acc Post Request
 const User = require('./models/userModel')
 app.post('/userCreateAcc', function(req,res) {
 
-    let data = req.body;
+    const data = req.body;
 
     //Data validation
     if(data.email !== data.reEmail) {
         if(data.password !== data.rePassword) {
-            //Tell user they need to have matching password and email
-            res.redirect('userCreateAcc')
+            //Tell user they need to have matching email and password
+            return res.redirect('userCreateAcc/noMatch/email+password')
         }
     //Tell user they need to have matching email
-    res.redirect('userCreateAcc')
+    return res.redirect('userCreateAcc/noMatch/email')
     }
-    else if (data.password !== data.rePassword) {
-        if(data.email !== data.reEmail) {
-            //Tell user they need to have matching password and email
-            res.redirect('userCreateAcc')
-        }
-    //Tell user they need to have matching password
+    else if(data.password !== data.rePassword) {
+        return res.redirect('userCreateAcc/noMatch/password')
     }
+
+
+
     else {
-    
+    console.log("User created ---> "+data.givenName+" "+data.lastName)
     //Creating the User
     let user = new User();
     user.givenName = data.givenName;
@@ -130,6 +138,7 @@ app.post('/shopCreateAcc', function(req,res) {
             shop.categories.push(data.category3)
             break;
     }
+
     //Adding the fields to the shop object
     shop.name = data.name;
     shop.email = data.email;
@@ -170,56 +179,36 @@ app.get('/signin/err', function(req, res) {
     })
 });
 
+app.post('/signin', async function(req, res) {
 
-app.post('/signin', function(req, res) {
-    let data  = req.body;
-    User.find({email: data.email},'_id email password', function(err, docs) {
-        if(err) {
-            console.log(err);
-        }
-        else {
-            
-            //Checking if its a shop instead
-            Shop.find({email: data.email}, '_id email password', function(err,docs) {
-                if(err) {
-                    console.log(err);
-                }
-                else {
-                    
-                    
-                    
-                    //Checking if it returned any shops
-                    if(docs.length === 0) {
-                        console.log('no shop found')
-                        res.redirect('/signin/err')
-                    }
-                    else {
-                        
-                        //Finding the matching user
-                        for(i = 0; i < docs.length; i++) {
-                            if(data.password == docs[i].password) {
-                                res.redirect('/'+docs[i]._id + '/shophome')
-                            }
-                        }
-                    }
-                }
-            })
+    const data = req.body
 
-            //Finding the matching user
-            if(docs.length === 0) {
-                console.log('no user found')
-                res.redirect('/signin/err');
-            }
-            else {
-                for(i = 0; i < docs.length; i++) {
-                    if(data.password == docs[i].password) {
-                        res.redirect('/'+docs[i]._id + '/userhome')
-                    }
-                }
-            }
-        }
-    })
+    //Searches the shop db and the user db for a matching email + password
+    const userResult = await User.findOne({ email: data.email, password: data.password }, '_id email password');
+    const shopResult = await Shop.findOne({ email: data.email, password: data.password }, '_id email password');
+
+
+    //If both dbs return nothing, then err
+    if(!userResult && !shopResult) {
+        return res.redirect('/signin/err');
+      }
     
-})
+    //If db returns a user, send to user page
+    if(userResult) {
+        return res.redirect('/'+userResult._id + '/userhome')
+      }
+    
+    //If db returns a shop, send to shop page
+    if(shopResult) {
+        return res.redirect('/'+shopResult._id + '/shophome')
+      }
 
+});
+
+//Rendering the Shop home page (shop view)
+app.get('/:id/shophome', function(req, res) {
+    res.render('shopHome', {
+        id: req.params.id
+    });
+});
 

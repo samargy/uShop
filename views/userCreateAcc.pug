@@ -17,6 +17,8 @@ block content
                 div(class="form-group col-lg-4"  id="emailGroup1")
                     label(for="inputEmail") Email
                     input(name="email" style="width: 85%" type="email" class="form-control" id="inputEmail" placeholder="example@uShop.com")
+                    if (field === 'email') || (field === 'email+password')
+                        div(class="customValidation") Please enter a matching email
             div(class="form-row")
                 div(class="form-group col-lg-4")
                     label(for="inputLastN") Last Name
@@ -24,6 +26,8 @@ block content
                 div(class="form-group col-lg-4" id="emailGroup2")
                     label(for="inputReEmail") Re-enter Email
                     input(name="reEmail" style="width: 85%" type="email" class="form-control" id="inputReEmail" placeholder="example@uShop.com")
+                    if (field === 'email') || (field === 'email+password')
+                        div(class="customValidation") Please enter a matching email
             div(class="form-row")
                 div(class="form-group col-lg-4")
                     label(for="inputAddress") Address
@@ -31,7 +35,9 @@ block content
                 div(class="form-group col-lg-4" id="passwordGroup1")
                     label(for="inputPassword") Password 
                         i (Minimum 7 Characters)
-                    input(name="password" style="width: 85%" type="password" class="form-control" id="inputPassword" placeholder="Password")
+                    input(name="password" style="width: 85%" type="password" class="form-control" id="inputPassword" placeholder="Password" minlength=7)
+                    if (field === 'password') || (field === 'email+password')
+                        div(class="customValidation") Please enter a matching password
             div(class="form-row")
                     div(class="form-group col-lg-2")
                         label(for="inputPostcode") Postcode 
@@ -48,7 +54,9 @@ block content
                             option(value="TAS") ACT
                     div(class="form-group col-lg-4" id="passwordGroup2")
                         label(for="inputRePassword") Re-enter Password 
-                        input(name="rePassword" style="width: 85%" type="password" class="form-control" id="inputRePassword" placeholder="Password")   
+                        input(name="rePassword" style="width: 85%" type="password" class="form-control" id="inputRePassword" placeholder="Password" minlength=7)  
+                        if (field === 'password') || (field === 'email+password')
+                            div(class="customValidation") Please enter a matching password 
             div(class="form-row")
                 div(class="form-group col-lg-4")
                     label(for="inputDOB") Date of Birth
@@ -65,4 +73,3 @@ block content
             h3 shop instead?
             a(href="/shopCreateAcc" class="font-weight-light") Click Here
 
-    script(src="/js/validation.js")

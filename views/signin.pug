@@ -12,11 +12,13 @@ html
             a(class="navbar-text" style="font-size:175%; color:white; padding:0px" href="/") uShop.com
         h1(class="display-2 text-center position-relative" style="top: 3rem; font-size: 400%") Sign In
         form(action="/signin" method="POST")
+            if err == true
+                div(class="alert alert-danger col-lg-4 offset-lg-4 position-relative" style="top: 7rem;") 
+                    strong Error: 
+                    div Your email and password doesn't match
             div(class="form-row position-relative" style="top:7rem")
                 label(class="col-lg-4 col-form-label position-relative text-right" for="inputEmail" style="font-size: 150%; top:-5px; left: -5px;") Email:
                 input(class="form-control col-lg-4" type="email" name="email" id="inputEmail")
-            //- if err == true
-            //-     div(class="invalid-feedback") email incorrect
             br
             div(class="form-row position-relative" style="top:7rem")
                 label(class="col-lg-4 col-form-label position-relative text-right" for="inputPassword" style="font-size: 150%; top:-5px; left: -5px;") Password:
