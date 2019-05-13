@@ -69,12 +69,15 @@ app.get('/shopCreateAcc', function(req, res) {
     res.render('shopCreateAcc')
 });
 
+
+//Rendering the page when emails/password don't match
 app.get('/shopCreateAcc/noMatch/:field', function(req, res) {
     res.render('shopCreateAcc', {
         field: req.params.field
     })
 });
 
+//Rendering the page when email or shop name already exist
 app.get('/shopCreateAcc/alreadyExist/:resultType', function(req, res){
     res.render('shopCreateAcc', {
         resultType: req.params.resultType
@@ -264,11 +267,94 @@ app.get('/:id/shophome', async function(req, res) {
     const id = req.params.id
     //Searching for the shop and setting it as a variable
     const shop = await Shop.findById(id);
-    console.log(shop)
 
+    //Sending the shop and the ammount of categories to pug
     res.render('shopHome', {
         shop: shop,
         categoryCount: shop.categories.length
     });
 });
 
+
+//Receiving Shop Page changes
+app.post('/:id/shopEditAcc', async function(req, res) {
+
+        //making req.body a single variable - ease of use
+        const data = req.body
+
+        //getting the shops id
+        const shopId = req.params.id
+
+        //getting the shop object
+        const shop = await Shop.findOne({_id: shopId})
+
+        //Searching for Shop with same name and storing in variable, 
+        //thats not its current id. The $ne paramater makes sure
+        //it isn't also searching for the current shops name.
+        const shopNameResult = await Shop.findOne({name: data.name, _id: { $ne: shopId}});
+        //Searching for Shop with same email and storing in variable.
+        //Also applying the same $ne logic described above
+        const shopEmailResult = await Shop.findOne({email: data.email, _id: { $ne: shopId}})
+
+        //Data Validation
+        if(data.email !== data.reEmail) {
+            if(data.password !== data.rePassword) {
+                //Tell user they need to have matching email and password
+                return res.redirect('shopHome/noMatch/email+password')
+            }
+        //Tell user they need to have matching email
+        return res.redirect('shopHome/noMatch/email')
+        }
+        else if(data.password !== data.rePassword) {
+            //Tell the user they need to have matching password
+            return res.redirect('shopHome/noMatch/password')
+        }
+        else if (shopNameResult) {
+            //Tell the user a shop with that name already exists
+            return res.redirect('shopHome/alreadyExist/name')
+        }
+        else if (shopEmailResult) {
+            //Tell the user a shop with that email already exists
+            return res.redirect('shopHome/alreadyExist/email')
+        }
+        else {
+            let updatedShop = {};
+            updatedShop.email = req.body.email
+
+            let updateQuery = {_id: shopId}
+
+            Shop.update(updateQuery, updatedShop, async function(err) {
+                if(err) {
+                    console.log(err)
+                }
+                else {
+                    return res.redirect('/'+shopId+'/shopHome')
+                }
+            })
+
+        }
+    
+});
+
+
+app.get('/:id/shopHome/:err/:code', async function(req, res) {
+    //Setting the id as a variable
+    const id = req.params.id
+    //Searching for the shop and setting it as a variable
+    const shop = await Shop.findById(id);
+    const err = req.params.err
+    if(err == 'noMatch'){
+    res.render('shopHome', {
+        shop: shop,
+        categoryCount: shop.categories.length,
+        field: req.params.code
+    })
+}
+    if(err == 'alreadyExist') {
+        res.render('shopHome', {
+        shop: shop,
+        categoryCount: shop.categories.length,
+        resultType: req.params.code
+        })
+    }
+})

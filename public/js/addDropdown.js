@@ -1,8 +1,14 @@
-
-let addButton = document.getElementById('addButton');
+//List of options to loop through
 const optionsArray = ["Baby and Nursery", "Beauty","Books, Stationary and Gifts","Clothing and accessories","Designer and Boutqiue","Discount and variety","Electronics and technology","Entertainment","Fresh food and groceries","Health and Fitness","Home","Luggage and travel accessories","Luxury and premium","Sporting goods","Toys and Hobbies"]
-let index = 3;
 
+//
+let addButton = document.getElementById('addButton');
+let categoryCount = document.getElementById('categoryCount')
+
+//Ammount of categories/row number
+let index = categoryCount.value;
+
+if(index < 3) {
 addButton.style.cursor = 'pointer'
 addButton.onclick = function() {
     
@@ -19,9 +25,12 @@ addButton.onclick = function() {
         reEnterPassword.classList.remove('offset-md-4');
     }
     index++;
-    let categoryCount = document.getElementById('categoryCount')
+
+    //a hidden value that the server can read when the form is posted
     categoryCount.value = Number(categoryCount.value) + 1;
 }
+}
+
 
 
 function createDropdown() {

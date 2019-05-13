@@ -1,9 +1,12 @@
 extends shop-layout
 
 block content 
+    //- Making the options array so the drop down boxes can be made
+    - const optionsArray = ["Baby and Nursery", "Beauty","Books, Stationary and Gifts","Clothing and accessories","Designer and Boutqiue","Discount and variety","Electronics and technology","Entertainment","Fresh food and groceries","Health and Fitness","Home","Luggage and travel accessories","Luxury and premium","Sporting goods","Toys and Hobbies"]
     div(class="custom-container" style="margin-left: 1rem")
         div(class="row")
             h4(class= "font-weight-light col-lg-4" style="top: 2rem") Shop Details
+            h4(class= "font-weight-light col-lg-4 offset-md-4 position-relative" style="top: 2rem; left:-3.4rem") Shop Image
         br
         br
         form(action="/"+shop._id+"/shopEditAcc" method="POST")
@@ -12,12 +15,133 @@ block content
                     label(for="inputName") Shop Name 
                         i (Must be unique)
                     input(name="name" style="width: 85%" type="text" class="form-control" id="inputName" value=shop.name)
+                    //- Validation feedback
                     if (resultType === 'name')
                         div(class="customValidation") The shop name you've entered already exists
                 div(class="form-group col-lg-4" id="emailGroup1")
                     label(for="inputEmail") Email
                     input(name="email" style="width: 85%" type="email" class="form-control" id="inputEmail" value=shop.email)
+
+                    //- Validation feedback
                     if (field === 'email') || (field === 'email+password')
                         div(class="customValidation") Please enter a matching email
                     if (resultType === 'email')
                         div(class="customValidation") The email you've entered already exists
+
+            div(class="form-row" id="row2")
+                div(class="form-group col-lg-4")
+                
+                    label(for="inputCategory1") Shop Category
+                    select(name="category1" style="width: 85%" class="form-control" id="inputCategory1")
+                        each option, i in optionsArray
+                            if option === shop.categories[0]
+                                option(value=option selected)=option
+                            else
+                                option(value=option)=option
+                div(class="form-group col-lg-4" id="emailGroup2")
+                    label(for="inputReEmail") Re-enter Email
+                    input(name="reEmail" style="width: 85%" type="email" class="form-control" id="inputReEmail" placeholder="example@uShop.com")
+
+                    //- Validation feedback
+                    if (field === 'email') || (field === 'email+password')
+                        div(class="customValidation") Please enter a matching email
+                    if (resultType === 'email')
+                        div(class="customValidation") The email you've entered already exists
+
+
+            //- The following conditionals produce the correct initial layout
+            //- depending on how many categories the shop has.
+
+            if categoryCount == 2 || categoryCount == 3
+                div(class="form-row" id="row3")
+                    div(class="form-group col-lg-4")
+                        label(for="inputCategory1") Shop Category  2
+                        select(name="category2" style="width: 85%" class="form-control" id="inputCategory2")
+                            each option, i in optionsArray
+                                if option === shop.categories[1]
+                                    option(value=option selected)=option
+                                else
+                                    option(value=option)=option
+                    div(class="form-group col-lg-4" id="passwordGroup1")
+                        label(for="inputPassword") Password 
+                            i (Minimum 7 Characters)
+                        input(name="password" style="width: 85%" type="password" class="form-control" id="inputPassword" value=shop.password)
+                        //- Validation feedback
+                        if (field === 'password') || (field === 'email+password')
+                            div(class="customValidation") Please enter a matching password
+                if categoryCount == 3
+                    div(class="form-row" id="row4")
+                        div(class="form-group col-lg-4")
+                            label(for="inputCategory1") Shop Category 3
+                            select(name="category3" style="width: 85%" class="form-control" id="inputCategory3")
+                                //- Iterates through the options array,
+                                    if it finds that one of the options
+                                    is the option saved with the shop
+                                    then it sets this one as selected
+                                each option, i in optionsArray
+                                    if option === shop.categories[2]
+                                        option(value=option selected)=option
+                                    else
+                                        option(value=option)=option
+                        div(class="form-group col-lg-4" id="passwordGroup2")
+                            label(for="inputRePassword") Re-enter Password 
+                            input(name="rePassword" style="width: 85%" type="password" class="form-control" id="inputRePassword" placeholder="Password")
+                            //- Validation feedback
+                            if (field === 'password') || (field === 'email+password')
+                                div(class="customValidation") Please enter a matching password
+                    div(class="form-row" id="row5")
+                        div(class="form-group col-lg-4")
+                        div(class="form-group col-lg-4")
+                            input(style="position: relative; height: 60px; width: 350px; background-color: #1D3557; color: white; border-radius: 10px; font-size: 190%; top: 1rem " type="submit" value="Apply Changes" id="submit")
+                    
+                if categoryCount == 2
+                    div(class="form-row" id="row4")
+                        div(class="form-group col-lg-4" id="addButton")
+                            img(src="/images/plus_button.png" style="width: 5%;" id="addButton")
+                            a(style="left: 1rem" class="position-relative") Add New Category
+                        div(class="form-group col-lg-4" id="passwordGroup2")
+                            label(for="inputRePassword") Re-enter Password 
+                            input(name="rePassword" style="width: 85%" type="password" class="form-control" id="inputRePassword" placeholder="Password")
+                            //- Validation feedback
+                            if (field === 'password') || (field === 'email+password')
+                                div(class="customValidation") Please enter a matching password
+                    div(class="form-row" id="row5")
+                        div(class="form-group col-lg-4")
+                        div(class="form-group col-lg-4")
+                            input(style="position: relative; height: 60px; width: 350px; background-color: #1D3557; color: white; border-radius: 10px; font-size: 190%; top: 1rem " type="submit" value="Apply Changes" id="submit")
+            else
+                div(class="form-row" id="row3")
+                    div(class="form-group col-lg-4" id="addButton")
+                        img(src="/images/plus_button.png" style="width: 5%;" id="addButton")
+                        a(style="left: 1rem" class="position-relative") Add New Category
+                    div(class="form-group col-lg-4" id="passwordGroup1")
+                        label(for="inputPassword") Password 
+                            i (Minimum 7 Characters)
+                        input(name="password" style="width: 85%" type="password" class="form-control" id="inputPassword" value=shop.password)
+                        //- Validation feedback
+                        if (field === 'password') || (field === 'email+password')
+                            div(class="customValidation") Please enter a matching password
+                div(class="form-row" id="row4")
+                    div(class="form-group col-lg-4 offset-md-4" id="passwordGroup2")
+                        label(for="inputRePassword") Re-enter Password 
+                        input(name="rePassword" style="width: 85%" type="password" class="form-control" id="inputRePassword" placeholder="Password")
+                        //- Validation feedback
+                        if (field === 'password') || (field === 'email+password')
+                            div(class="customValidation") Please enter a matching password
+                div(class="form-row" id="row5")
+                    div(class="form-group col-lg-4")
+                    div(class="form-group col-lg-4")
+                        input(style="position: relative; height: 60px; width: 350px; background-color: #1D3557; color: white; border-radius: 10px; font-size: 190%; top: 1rem " type="submit" value="Apply Changes" id="submit")
+            //- Image upload
+            div(class="form-group col-lg-4 offset-lg-8 position-relative" style="margin-top: -25rem;left: -2rem")
+                - const imgSize = 250;
+                img(src="/images/placeholderimage-icon.png" style="max-width: "+imgSize+"px; max-height: "+imgSize+"px; left: -20px" class="border border-dark rounded position-relative")
+                div(class="custom-file" style="left: -20px; margin-top: 10px; width: 60%")
+                    input(id="imageFile" name="imageFile" class="custom-file-input position-relative" type="file" style="left: -35px; padding: 10px" accept="image/*")
+                    label(class="custom-file-label" for="image")
+            div(hidden) 
+                div(class="form-group")
+                    input(name="categoryCount" id="categoryCount" value=categoryCount readonly)
+        script(src="/js/addDropdown.js")
+            
+
