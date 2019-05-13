@@ -1,0 +1,11 @@
+A universal shopping application made for me to better understand 
+how to use node, express, mongoDB and pug. 
+
+It has all the main features of a normal shopping app and has two
+different target audiences being both shops and users/customers
+
+Note: It doesn't use proper industry standards for some things 
+e.g password authentication or password hashing due to me wanting 
+to spend more time on other things
+
+Note 2: Also, it isn't as responsive as I would like it to be.
