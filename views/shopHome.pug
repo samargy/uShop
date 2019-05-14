@@ -3,13 +3,33 @@ extends shop-layout
 block content 
     //- Making the options array so the drop down boxes can be made
     - const optionsArray = ["Baby and Nursery", "Beauty","Books, Stationary and Gifts","Clothing and accessories","Designer and Boutqiue","Discount and variety","Electronics and technology","Entertainment","Fresh food and groceries","Health and Fitness","Home","Luggage and travel accessories","Luxury and premium","Sporting goods","Toys and Hobbies"]
+
+    //- Making the success modal render only if the page has been updated
+    if updated == true
+        div(class="modal fade success" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalTitle" aria-hidden="true")
+            div(class="modal-dialog modal-dialog-centered" role="document")
+                div(class="modal-content")
+                    div(class="modal-header")
+                        h5(class="modal-title" id="successModalLongTitle") Shop Updated
+                        button(type="button" class="close" data-dismiss="modal" aria-label="Close")
+                            span(aria-hidden="true") &times;
+                    div(class="modal-body")
+                        p Your shop has been updated
+        //- Jquery to open the modal
+        script.
+            $(window).on('load', function() {
+                $('#successModal').modal('show')
+            })
+
+    //- rest of the page
     div(class="custom-container" style="margin-left: 1rem")
         div(class="row")
             h4(class= "font-weight-light col-lg-4" style="top: 2rem") Shop Details
             h4(class= "font-weight-light col-lg-4 offset-md-4 position-relative" style="top: 2rem; left:-3.4rem") Shop Image
         br
         br
-        form(action="/"+shop._id+"/shopEditAcc" method="POST")
+        div(class="")
+        form(action="/"+shop._id+"/shopEditAcc" method="POST" enctype="multipart/form-data")
             div(class="form-row" id="row1")
                 div(class="form-group col-lg-4")
                     label(for="inputName") Shop Name 
@@ -135,13 +155,32 @@ block content
             //- Image upload
             div(class="form-group col-lg-4 offset-lg-8 position-relative" style="margin-top: -25rem;left: -2rem")
                 - const imgSize = 250;
-                img(src="/images/placeholderimage-icon.png" style="max-width: "+imgSize+"px; max-height: "+imgSize+"px; left: -20px" class="border border-dark rounded position-relative")
-                div(class="custom-file" style="left: -20px; margin-top: 10px; width: 60%")
-                    input(id="imageFile" name="imageFile" class="custom-file-input position-relative" type="file" style="left: -35px; padding: 10px" accept="image/*")
-                    label(class="custom-file-label" for="image")
+                img(src="/photo-storage/"+shop.img style="max-width: "+imgSize+"px; max-height: "+imgSize+"px; left: -20px" class="border border-dark rounded position-relative")
+                div(class="custom-file" style="left: -20px; margin-top: 10px; width: 70%")
+                    input(id="imageFile" name="imageFile" class="custom-file-input" type="file" accept="image/*")
+                    label(id="imageLabelText" class="custom-file-label" for="imageFile") Choose your logo
+
+                //- Changing the name of the text to file name
+                script.
+                    $(document).on('change', ':file', function(){
+                        let input = $(this),
+                            label = input.val().replace(/\\/g,'/').replace(/.*\//,'')
+                        input.trigger('fileselect', [label])
+                    });
+
+                    $(document).ready(function() {
+                        $(':file').on('fileselect', function(event, label){
+                            $('#imageLabelText').text(label)
+                        })
+                    })
+
+            //- a hidden field that is posted, this increases 
+            //- when drop boxes are added
             div(hidden) 
                 div(class="form-group")
                     input(name="categoryCount" id="categoryCount" value=categoryCount readonly)
+
+        
         script(src="/js/addDropdown.js")
             
 

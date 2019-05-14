@@ -12,9 +12,11 @@ html
     body
         nav(class="navbar navbar-expand-md navbar-dark bg-dark sticky-top") 
             a(class="navbar-text" style="font-size:175%; color:white; padding:0px" href="/") uShop.com
-            img(src="/images/inventory-icon.png" class="position-absolute" style="width: 3.3%; right: 17rem" href="/"+shop._id+"/inventory")
+            a(class="img container" href="/"+shop._id+"/inventory")
+                img(src="/images/inventory-icon.png" class="position-absolute" style="width: 3.3%; right: 17rem;")  
             img(src="/images/sales-icon.png" class="position-absolute" style="width: 3.3%; right: 13.5rem" href="/"+shop._id+"/sales")
-            img(src="/images/profile-icon.png" class="position-absolute" style="width: 3.3%; right: 10rem" href="/"+shop._id+"/shopHome")
+            a(class="img container" href="/"+shop._id+"/shopHome")
+                img(src="/images/profile-icon.png" class="position-absolute" style="width: 3.3%; right: 10rem" href="/"+shop._id+"/shopHome")
             span(class="navbar-text position-absolute" style="right:50px; padding:0px")
                 a(style="font-size:120%; color:white" href="/logout") 
                     u Log Out
