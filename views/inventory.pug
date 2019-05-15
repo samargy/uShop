@@ -1,4 +1,24 @@
 extends shop-layout
 
 block content
-    div(class="display") Inventory
+    div(class="display-4 p-4") Inventory
+    table(class="table" style="width: 85%")
+        thead
+            th(scope="col") Image
+            th(scope="col") Item ID
+            th(scope="col") Category
+            th(scope="col") Name
+            th(scope="col") In Stock
+            th(scope="col") Retail Price
+            th(scope="col") Buy Price
+            th(scope="col") Last Stocked
+        tbody
+            tr
+                th(scope="row")
+                    img(src="/photo-storage/placeholderimage-icon.png" style="max-width: 60px")
+                td John
+            tr
+                th(scope="row")
+                td Hello
+
+
