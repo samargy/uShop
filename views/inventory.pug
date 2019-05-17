@@ -1,24 +1,26 @@
 extends shop-layout
 
 block content
-    div(class="display-4 p-4") Inventory
-    table(class="table" style="width: 85%")
-        thead
-            th(scope="col") Image
-            th(scope="col") Item ID
-            th(scope="col") Category
-            th(scope="col") Name
-            th(scope="col") In Stock
-            th(scope="col") Retail Price
-            th(scope="col") Buy Price
-            th(scope="col") Last Stocked
-        tbody
-            tr
-                th(scope="row")
-                    img(src="/photo-storage/placeholderimage-icon.png" style="max-width: 60px")
-                td John
-            tr
-                th(scope="row")
-                td Hello
+    div(class="custom-container mt-5 ml-4")
+        h1(class="position-relative" style="top: -1rem") Inventory
+        table(class="table" style="width: 85%")
+            thead
+                th(scope="col") Image
+                th(scope="col") Item ID
+                th(scope="col") Category
+                th(scope="col") Name
+                th(scope="col") In Stock
+                th(scope="col") Retail Price
+                th(scope="col") Buy Price
+                th(scope="col") Last Stocked
+            tbody
+                tr
+                    th(scope="row")
+                        img(src="/photo-storage/placeholderimage-icon.png" style="max-width: 60px; max-height: 60px")
+                    td John
+                tr
+                    th(scope="row")
+                    td Hello
+        a(href="/"+shop._id+"/addItem" class="btn btn-primary") Add Item
 
 

@@ -1,0 +1,52 @@
+extends shop-layout
+
+block content
+    div(class="custom-container" style="margin-left: 1rem")
+        h1(class="position-relative " style="top: 1rem") Create an Item
+        div(class="row")
+                h4(class= "font-weight-light col-md-4" style="top: 2rem") Item Details
+                h4(class="font-weight-light col-md-4" style="top: 2rem; margin-left: -0.3rem; ") Economic Details
+        br
+        br
+        form(action="/"+shop._id+"/addItem", method="post")
+            div(class="form-row" id="row1")
+                div(class="form-group col-lg-4")
+                    label(for="inputName") Item Name 
+                    input(name="name" style="width: 85%" type="text" class="form-control" id="inputName" placeholder="e.g. 'NVIDA GTX 1080'")
+                div(class="form-group col-md-3")
+                    label(for="inputRetail") Retail Price 
+                        i (per item)
+                    div(class="input-group" style="width: 65%")
+                        div(class="input-group-prepend")
+                            span(class="input-group-text" style="background-color: #FFF; border-right: none") $
+                        input(name="retail_price" type="number" class="form-control" id="inputRetail" placeholder="84.00")
+                div(class="form-group" style="margin-left: -2rem")
+                    label(for="inputEcoOrder") Economic Order Quantity 
+                        i (units)
+                    div(class="input-group" style="width: 65%; ")
+                        input(name="eor" type="number" class="form-control" id="inputEcoOrder" placeholder="0")
+            div(class="form-row" id="row2")
+                div(class="form-group col-lg-4")
+                    label(for="inputCategory") Item Category 
+                    select(name="category" style="width: 85%" class="form-control" id="inputCategory")
+                        option test
+                div(class="form-group col-md-3")
+                    label(for="inputBuy") Buy Price 
+                        i (per item)
+                    div(class="input-group" style="width: 65%")
+                        div(class="input-group-prepend")
+                            span(class="input-group-text" style="background-color: #FFF; border-right: none") $
+                        input(name="buy_price" type="number" class="form-control" id="inputBuy" placeholder="84.00")
+                div(class="form-group" style="margin-left: -2rem")
+                    label(for="inputInitial") Initial Stock         
+                        i (units)
+                    div(class="input-group" style="width: 80%;")
+                        input(name="intialStock" type="number" class="form-control" id="inputInitial" placeholder="0")
+            div(class="form-row" id="row3")
+                div(class="form-group col-lg-4")
+                    label(for="inputManufacturer") Item Manufacturer 
+                    select(name="manufacturer" style="width: 85%" class="form-control" id="inputManufacturer")
+                        option Bunnings
+                div(class="form-group col-lg-4")
+                    label(for="inputMinStock") Min Stock
+                    input(class="form-control-range" type="range" id="inputMinStock" style="width: 50%")

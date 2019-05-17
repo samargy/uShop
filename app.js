@@ -449,3 +449,17 @@ app.get('/:id/inventory', async function(req, res) {
         shop: shop
     })
 });
+
+const Item = require('./models/itemModel')
+
+app.get('/:id/addItem', async function(req, res) {
+
+     //Setting the shop id as a variable
+     const id = req.params.id
+
+     //Searching for the shop and setting it as a vraible 
+     const shop = await Shop.findById(id)
+    res.render('addItem', {
+        shop: shop
+    })
+})
