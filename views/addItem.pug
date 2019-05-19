@@ -27,9 +27,11 @@ block content
                         input(name="eor" type="number" class="form-control" id="inputEcoOrder" placeholder="0")
             div(class="form-row" id="row2")
                 div(class="form-group col-lg-4")
-                    label(for="inputCategory") Item Category 
+                    label(for="inputCategory") Category 
                     select(name="category" style="width: 85%" class="form-control" id="inputCategory")
                         option test
+                a(class="position-relative" href="/edit" style="margin-left: -3rem; margin-right: 1.1rem; top: 40px")
+                    u Edit    
                 div(class="form-group col-md-3")
                     label(for="inputBuy") Buy Price 
                         i (per item)
@@ -44,9 +46,44 @@ block content
                         input(name="intialStock" type="number" class="form-control" id="inputInitial" placeholder="0")
             div(class="form-row" id="row3")
                 div(class="form-group col-lg-4")
-                    label(for="inputManufacturer") Item Manufacturer 
+                    label(for="inputManufacturer") Manufacturer 
                     select(name="manufacturer" style="width: 85%" class="form-control" id="inputManufacturer")
                         option Bunnings
+                a(class="position-relative" href="/edit" style="margin-left: -3rem; margin-right: 1.1rem; top: 40px")
+                    u Edit    
                 div(class="form-group col-lg-4")
-                    label(for="inputMinStock") Min Stock
-                    input(class="form-control-range" type="range" id="inputMinStock" style="width: 50%")
+                    label(for="inputMinStock") Minimum Stock Threshold 
+                        i (units)
+                    input(class="custom-form-control-range mt-3 slider" type="range" id="inputMinStock" style="width: 70%;" min=0 max=10000)
+                    br
+                    output(class="container text-center" id="sliderValue" style="width: 70%") 5000
+                //- Slider value script
+                script.
+                    document.getElementById('inputMinStock').oninput = function() {
+                        var val = document.getElementById("inputMinStock").value //gets the oninput value
+                        document.getElementById('sliderValue').innerHTML = val //displays this value to the html page
+                    };
+            div(class="form-row" id="row4")
+                div(class="form-group col-lg-4")
+                    label(for="inputDesc") Description
+                    textarea(type="textarea"  style="width: 85%" class="form-control")
+                div(class="form-group col-lg-4")
+                    label(for="imageFile") Upload Item Image
+                    br
+                    input(id="imageFile" name="imageFile" class="custom-file-input" type="file" accept="image/*")
+                    label(id="imageLabelText" class="custom-file-label position-relative" style="top:-1.8rem; width: 300px" for="imageFile") Choose your logo
+            
+                //- Changing the name of the text to file name
+                script.
+                    $(document).on('change', ':file', function(){
+                        let input = $(this),
+                            label = input.val().replace(/\\/g,'/').replace(/.*\//,'')
+                        input.trigger('fileselect', [label])
+                    });
+
+                    $(document).ready(function() {
+                        $(':file').on('fileselect', function(event, label){
+                            $('#imageLabelText').text(label)
+                        })
+                    })
+                

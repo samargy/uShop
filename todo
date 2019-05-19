@@ -2,5 +2,12 @@
 
 TODO LIST / left undone
 
-1. fix weird input box bug, can't click whole thing
-2. complete inventory page
+Inventory Page:
+    1. Finish table formatting
+    2. Finish buttons formatting
+
+Create Item Page:
+    1. Get the edit category + manufacturer modal forms done
+    2. Make input slider output dynamic???
+    3. image upload box and upload done
+    4. create item on POST
