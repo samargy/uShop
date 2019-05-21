@@ -27,7 +27,7 @@ block content
                         td $#{item.buy_price}
                         td=item.stock_date
                         td
-                            a(href="/edit" class="position-relative ml-0") 
+                            a(href="/"+item._id +"/editItem") 
                                 u Edit
 
     div(id="buttonGroup" class="container col-md-2 offset-md-10 position-absolute" style= "top: 11rem")

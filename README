@@ -6,6 +6,11 @@ different target audiences being both shops and users/customers
 
 Note: It doesn't use proper industry standards for some things 
 e.g password authentication or password hashing due to me wanting 
-to spend more time on other things
+to spend more time on other things.
+One big thing is user and shop login, instead of using sessions and cookies, 
+I just have the Id present in the url, this is not secure at all, in future I 
+would use something like Passport.js and using its Oauth and mongoose functions.
 
 Note 2: Also, it isn't as responsive as I would like it to be.
+
+

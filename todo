@@ -2,12 +2,6 @@
 
 TODO LIST / left undone
 
-Inventory Page:
-    1. Finish table formatting
-    2. Finish buttons formatting
-
 Create Item Page:
     1. Get the edit category + manufacturer modal forms done
-    2. Make input slider output dynamic???
-    3. image upload box and upload done
-    4. create item on POST
+        1a) get it so you can edit both on one item (only works one at time rn)
