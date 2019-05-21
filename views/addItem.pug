@@ -8,7 +8,7 @@ block content
                 h4(class="font-weight-light col-md-4" style="top: 2rem; margin-left: -0.3rem; ") Economic Details
         br
         br
-        form(action="/"+shop._id+"/addItem", method="post")
+        form(action="/"+shop._id+"/addItem", method="post" enctype="multipart/form-data")
             div(class="form-row" id="row1")
                 div(class="form-group col-lg-4")
                     label(for="inputName") Item Name 
@@ -43,7 +43,7 @@ block content
                     label(for="inputInitial") Initial Stock         
                         i (units)
                     div(class="input-group" style="width: 80%;")
-                        input(name="intialStock" type="number" class="form-control" id="inputInitial" placeholder="0")
+                        input(name="initialStock" type="number" class="form-control" id="inputInitial" placeholder="0")
             div(class="form-row" id="row3")
                 div(class="form-group col-lg-4")
                     label(for="inputManufacturer") Manufacturer 
@@ -54,7 +54,7 @@ block content
                 div(class="form-group col-lg-4")
                     label(for="inputMinStock") Minimum Stock Threshold 
                         i (units)
-                    input(class="custom-form-control-range mt-3 slider" type="range" id="inputMinStock" style="width: 70%;" min=0 max=10000)
+                    input(name="minStock" class="custom-form-control-range mt-3 slider" type="range" id="inputMinStock" style="width: 70%;" min=0 max=10000)
                     br
                     output(class="container text-center" id="sliderValue" style="width: 70%") 5000
                 //- Slider value script
@@ -66,7 +66,7 @@ block content
             div(class="form-row" id="row4")
                 div(class="form-group col-lg-4")
                     label(for="inputDesc") Description
-                    textarea(type="textarea"  style="width: 85%" class="form-control")
+                    textarea(name="desc" type="textarea"  style="width: 85%" class="form-control")
                 div(class="form-group col-lg-4")
                     label(for="imageFile") Upload Item Image
                     br
@@ -86,4 +86,7 @@ block content
                             $('#imageLabelText').text(label)
                         })
                     })
-                
+            
+            div(class="form-row" id="row5")
+                div(class="form-group col-lg-4 offset-lg-8")
+                    input(style="position: relative; height: 60px; width: 350px; background-color: #1D3557; color: white; border-radius: 10px; font-size: 190%; top: -3rem " type="submit" value="Create Item" id="submit")

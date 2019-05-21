@@ -7,10 +7,10 @@ var itemSchema = new Schema ({
     category: String,
     manufacturer: String,
     retail_price: Number,
-    buy_price: Array,
+    buy_price: Number,
     img: String,
     stock: Number,
-    stock_date: Date,
+    stock_date: String,
     minStock: Number,
     eor: Number,
     desc: String

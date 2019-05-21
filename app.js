@@ -4,7 +4,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const fileUpload = require('express-fileupload')
+const fileUpload = require('express-fileupload');
 const port = 3000;
 
 //file Upload middleware
@@ -366,6 +366,7 @@ app.post('/:id/shopEditAcc', async function(req, res) {
             updatedShop.img = shop._id + 'logo' + '.' + ext
             console.log(updatedShop.img)
         }
+        console.log(req)
             //Making the query for the update function
             const updateQuery = {_id: shopId}
 
@@ -445,12 +446,18 @@ app.get('/:id/inventory', async function(req, res) {
         //Searching for the shop and setting it as a vraible 
         const shop = await Shop.findById(id)
 
+        //Getting the items
+
+        const itemsFound = await Item.find({shopId: id})
+        console.log(itemsFound)
+
     res.render('inventory', {
-        shop: shop
+        shop: shop,
+        items: itemsFound
     })
 });
 
-const Item = require('./models/itemModel')
+
 
 app.get('/:id/addItem', async function(req, res) {
 
@@ -463,3 +470,85 @@ app.get('/:id/addItem', async function(req, res) {
         shop: shop
     })
 })
+
+
+//Getting item model
+const Item = require('./models/itemModel')
+app.post('/:id/addItem', async function(req, res) {
+
+    const id = req.params.id
+    const data = req.body
+
+    let item = new Item();
+    
+    //Setting the shop id to the id sent through params
+    item.shopId = id
+
+    //Setting all the variables to their corresponding components
+    item.name = data.name;
+    item.category = data.category;
+    item.manufacturer = data.manufacturer;
+    item.retail_price = data.retail_price;
+    item.buy_price = data.buy_price;
+
+    //Setting stock to the intial stock
+    item.stock = data.initialStock;
+
+    //Setting the intial stock date to today
+    item.stock_date = getDate();
+
+    item.minStock = data.minStock;
+    item.eor = data.eor;
+
+    item.desc = data.desc;
+
+    console.log(item._id)
+    //First checking a file was submitted
+    if(!((req.files) == null)){
+        //Saving the image
+        let itemImg = req.files.imageFile
+        //getting the extension of it
+        const ext = itemImg.mimetype.split('/')[1];
+        itemImg.mv(path.join(__dirname,'public/photo-storage/'+ item._id + 'itemImg' + '.' + ext), function(err){
+            if(err) {
+                console.log(err)
+            }
+        })
+        item.img = item._id + 'itemImg' + '.' + ext
+        console.log(item.img)
+    }
+
+    item.save(function(err) {
+        if(err) {
+            console.log(err)
+            return;
+        } else {
+            //Log the user has been created and direct to sign in page
+            console.log("Item created ---> "+item.name+" id:"+item._id)
+            res.redirect('/'+id+'/inventory')
+        }
+    
+    })
+
+
+
+
+
+    
+
+});
+
+
+
+//Getting the date function
+function getDate() {
+    let date = new Date(); 
+
+    let d = date.getDate();
+    let m = date.getMonth();
+    let y = date.getFullYear();
+
+    let DateString = d + '/' + m + '/' + y
+    
+    return DateString;
+}
