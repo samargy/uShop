@@ -1,0 +1,23 @@
+extends shop-layout
+
+block content
+    div(class="custom-container" style="margin-left: 1rem")
+        h1(class="position-relative " style="top: 1rem") Edit Categories
+        a(href='/'+shop._id+'/addItem' class="col-md-5 offset-md-5 p-0" style="top: -40px; font-size: 200%") Back
+        br
+        form(method='post' action='/'+shop._id+'/editCats')
+            div(class="row col-md-5")
+                input(class="form-control" name="category")
+            div(class="row col-md-5")
+                input(class="submit btn-primary mt-3 ml-1" type="submit" value="Add Category")
+        br
+        table(class="table" style="width: 50%")
+            thead
+                th Categories
+            tbody
+                each category, i in shop.itemCategories
+                    tr
+                        td=category
+                        td
+                            a(href='/'+shop._id+'/editCats/deletecategory/'+i)
+                                span(style="font-size: 200%; color: red;") &times; 

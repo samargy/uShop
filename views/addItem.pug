@@ -26,21 +26,14 @@ block content
                     div(class="input-group" style="width: 65%; ")
                         input(name="eor" type="number" class="form-control" id="inputEcoOrder" placeholder="0")
             div(class="form-row" id="row2")
-                if editingCat === undefined
-                    div(class="form-group col-lg-4")
-                        label(for="inputCategory") Category 
-                        select(name="category" style="width: 85%" class="form-control" id="inputCategory")
-                            //- Iterating through the item categories list
-                            each category, c in shop.itemCategories
-                                option(value=category)=category
-                    a(class="position-relative" href="/"+shop._id+"/editCats" style="margin-left: -3rem; margin-right: 1.1rem; top: 40px")
-                        u Edit   
-                else 
-                    div(class="form-group col-lg-4")
-                        label(for="inputCategory") Category 
-                        input(name="newCategory" style="width: 85%" class="form-control" id="inputCategory" placeholder="Type your new category here")
-                    a(class="position-relative" href="/"+shop._id+"/addItem" style="margin-left: -3.2rem; margin-right: 0.7rem; top: 40px")
-                        u Save  
+                div(class="form-group col-lg-4")
+                    label(for="inputCategory") Category 
+                    select(name="category" style="width: 85%" class="form-control" id="inputCategory")
+                        //- Iterating through the item categories list
+                        each category, c in shop.itemCategories
+                            option(value=category)=category
+                a(class="position-relative" href="/"+shop._id+"/editCats" style="margin-left: -3rem; margin-right: 1.1rem; top: 40px")
+                    u Edit   
                 div(class="form-group col-md-3")
                     label(for="inputBuy") Buy Price 
                         i (per item)
@@ -54,20 +47,13 @@ block content
                     div(class="input-group" style="width: 80%;")
                         input(name="initialStock" type="number" class="form-control" id="inputInitial" placeholder="0")
             div(class="form-row" id="row3")
-                if editingManu === undefined
-                    div(class="form-group col-lg-4")
-                        label(for="inputManufacturer") Manufacturer 
-                        select(name="manufacturer" style="width: 85%" class="form-control" id="inputManufacturer")
-                            each manufacturer, i in shop.manufacturers
-                                option(value=manufacturer)=manufacturer
-                    a(class="position-relative" href="/"+shop._id+"/editManus" style="margin-left: -3rem; margin-right: 1.1rem; top: 40px")
-                        u Edit   
-                else 
-                    div(class="form-group col-lg-4")
-                        label(for="inputManufacturer") Manufacturer 
-                        input(name="newManufacturer" style="width: 85%" class="form-control" id="inputManufacturer" placeholder="Type your new manufacturer here")
-                    a(class="position-relative" href="/"+shop._id+"/addItem" style="margin-left: -3.2rem; margin-right: 0.5rem; top: 40px")
-                        u Undo    
+                div(class="form-group col-lg-4")
+                    label(for="inputManufacturer") Manufacturer 
+                    select(name="manufacturer" style="width: 85%" class="form-control" id="inputManufacturer")
+                        each manufacturer, i in shop.manufacturers
+                            option(value=manufacturer)=manufacturer
+                a(class="position-relative" href="/"+shop._id+"/editManus" style="margin-left: -3rem; margin-right: 1.1rem; top: 40px")
+                    u Edit  
                 div(class="form-group col-lg-4")
                     label(for="inputMinStock") Minimum Stock Threshold 
                         i (units)

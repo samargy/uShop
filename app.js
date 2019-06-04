@@ -450,7 +450,6 @@ app.get('/:id/inventory', async function(req, res) {
         const shop = await Shop.findById(id)
 
         //Getting the items
-
         const itemsFound = await Item.find({shopId: id})
         
 
@@ -481,7 +480,6 @@ app.post('/:id/addItem', async function(req, res) {
 
     const id = req.params.id
     const data = req.body
-    const shop = await await Shop.findById(id)
 
     let item = new Item();
     
@@ -490,69 +488,8 @@ app.post('/:id/addItem', async function(req, res) {
 
     //Setting all the variables to their corresponding components
     item.name = data.name;
-
-    //Checking if the shop has opted to add a new category,
-    //else just set the item.category equal to the value
-    //in the select box.
-    if(data.newCategory) {
-        item.category = data.newCategory
-
-        //Pushing the new category into the item categories array
-        //inside the shop object
-        let updatedShop = {}
-        updatedShop.itemCategories = shop.itemCategories
-        updatedShop.itemCategories.push(data.newCategory);
-
-
-        const updateQuery = {_id: id}
-
-        //Updating the record in mongodb
-        Shop.updateOne(updateQuery, updatedShop, async function(err) {
-            if(err) {
-                console.log(err)
-            }
-            else {
-                console.log('Updated Shop categories --> id: '+id)
-            }
-        });
-    }
-
-    else {
-        item.category = data.category;
-    }
-    
-
-
-    //Doing the same as above, although for manufacturer
-    if(data.newManufacturer) {
-        item.manufacturer = data.newManufacturer
-
-        //Pushing the new category into the item categories array
-        //inside the shop object
-        let updatedShop = {}
-        updatedShop.manufacturers = shop.manufacturers
-        updatedShop.manufacturers.push(data.newManufacturer);
-
-
-        const updateQuery = {_id: id}
-
-        //Updating the record in mongodb
-        Shop.updateOne(updateQuery, updatedShop, async function(err) {
-            if(err) {
-                console.log(err)
-            }
-            else {
-                console.log('Updated Shop manufacturers --> new manufacturer: '+ item.manufacturer)
-            }
-        });
-    }
-
-    else {
-        item.manufacturer = data.manufacturer;
-    }
-    
-
-
+    item.category = data.category;
+    item.manufacturer = data.manufacturer
     item.retail_price = data.retail_price;
     item.buy_price = data.buy_price;
 
@@ -611,32 +548,155 @@ app.post('/:id/addItem', async function(req, res) {
 //Route for when the shop wants to add a new category
 app.get('/:id/editCats', async function(req, res) {
 
+        //Setting the shop id as a variable
+        const id = req.params.id
+
+        //Searching for the shop and setting it as a variable 
+        const shop = await Shop.findById(id)
+        res.render('addCats', {
+            shop: shop,
+        })
+});
+
+
+
+app.post('/:id/editCats', async function(req, res) {
 
         //Setting the shop id as a variable
         const id = req.params.id
 
-         //Searching for the shop and setting it as a variable 
+        //making the query 
+        const updateQuery = {_id: id}
+
+        //getting the shop
         const shop = await Shop.findById(id)
-        res.render('addItem', {
-            shop: shop,
-            editingCat: true
+
+        updatedShop = {}
+
+        updatedShop.itemCategories = shop.itemCategories
+
+        //pushing the new category onto the array
+        updatedShop.itemCategories.push(req.body.category)
+
+        Shop.updateOne(updateQuery, updatedShop, async function(err) {
+            if(err) {
+                console.log(err)
+            }
+            else {
+                console.log('Updated Shop Categories--> catName: '+req.body.category)
+    
+                //return to edit category page, with updated results
+                return res.redirect('/'+id+'/editCats')
+            }
         })
 });
+
+
+app.get('/:id/editCats/deletecategory/:index', async function(req, res) {
+    
+    //Doing the same as the above funciton, however, removing a manufacturer
+    const id = req.params.id
+    const catIndex = req.params.index
+    const shop = await Shop.findById({_id: id})
+
+    const updateQuery = {_id: id}
+
+    updatedShop = {}
+
+    updatedShop.itemCategories = shop.itemCategories
+    
+    //Removing the manufacturer out of the array
+    updatedShop.itemCategories.splice(catIndex,1)
+
+    Shop.updateOne(updateQuery, updatedShop, async function(err) {
+        if(err) {
+            console.log(err)
+        }
+        else {
+            console.log('Removed Item Category from Shop')
+
+            //return to edit manufacturers page, with updated results
+            return res.redirect('/'+id+'/editCats')
+        }
+    })
+})
 
 
 //Route for when the shop wants to add a new manufacturer
 app.get('/:id/editManus', async function(req, res) {
 
 
-     //Setting the shop id as a variable
-     const id = req.params.id
+    //Setting the shop id as a variable
+    const id = req.params.id
 
      //Searching for the shop and setting it as a variable 
     const shop = await Shop.findById(id)
-    res.render('addItem', {
+    console.log(shop.manufacturers);
+
+    res.render('addManus', {
         shop: shop,
-        editingManu: true
     })
+});
+
+app.post('/:id/editManus', async function(req, res){
+    const id = req.params.id
+
+    //making a query
+    const updateQuery = {_id: id}
+
+    //getting the shop
+    const shop = await Shop.findById(id)
+
+    //making an empty object
+    updatedShop = {}
+
+    //Setting the manufacturers array to the current array stored in mongo
+    updatedShop.manufacturers = shop.manufacturers
+    //pushing the new manufacturer onto array
+    updatedShop.manufacturers.push(req.body.manufacturer)
+
+    Shop.updateOne(updateQuery, updatedShop, async function(err) {
+        if(err) {
+            console.log(err)
+        }
+        else {
+            console.log('Updated Shop Manufacturers--> id: '+id)
+
+            //return to edit manufacturers page, with updated results
+            return res.redirect('/'+id+'/editManus')
+        }
+    })
+});
+
+app.get('/:id/editManus/deletemanufacturer/:index', async function(req, res) {
+
+    //Doing the same as the above funciton, however, removing a manufacturer
+
+    const id = req.params.id
+    const manuIndex = req.params.index
+    const shop = await Shop.findById({_id: id})
+
+    const updateQuery = {_id: id}
+
+    updatedShop = {}
+
+    updatedShop.manufacturers = shop.manufacturers
+    
+    //Removing the manufacturer out of the array
+    updatedShop.manufacturers.splice(manuIndex,1)
+
+    Shop.updateOne(updateQuery, updatedShop, async function(err) {
+        if(err) {
+            console.log(err)
+        }
+        else {
+            console.log('Removed Manufacturer from Shop')
+
+            //return to edit manufacturers page, with updated results
+            return res.redirect('/'+id+'/editManus')
+        }
+    })
+
 });
 
 
