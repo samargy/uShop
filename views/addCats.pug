@@ -3,7 +3,8 @@ extends shop-layout
 block content
     div(class="custom-container" style="margin-left: 1rem")
         h1(class="position-relative " style="top: 1rem") Edit Categories
-        a(href='/'+shop._id+'/addItem' class="col-md-5 offset-md-5 p-0" style="top: -40px; font-size: 200%") Back
+            a(class="position-relative" href="/"+shop._id+"/addItem" style="left: 3rem")
+                u(style="font-size: 70%;") Back
         br
         form(method='post' action='/'+shop._id+'/editCats')
             div(class="row col-md-5")

@@ -7,7 +7,6 @@ var shopSchema = new Schema ({
     email: String,
     password: String,
     sales: Object,
-    inventory: Array,
     img: String,
     itemCategories: Array,
     manufacturers: Array,

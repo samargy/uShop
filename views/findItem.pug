@@ -1,0 +1,79 @@
+extends shop-layout
+
+
+block content
+    div(class="custom-container" style="margin-left: 1rem")
+        h1(class="position-relative " style="top: 1rem") Find Item(s)
+            a(class="position-relative" href="/"+shop._id+"/inventory" style="left: 3rem")
+                u(style="font-size: 70%;") Back
+        div(class="row")
+                h4(class= "font-weight-light col-md-4" style="top: 2rem") Item Details
+                h4(class="font-weight-light col-md-4" style="top: 2rem; margin-left: -0.3rem; ") Economic Details
+        br
+        br
+        form(action="/"+shop._id+"/findItem", method="post" enctype="multipart/form-data")
+            div(class="form-row" id="row1")
+                div(class="form-group col-lg-4")
+                    label(for="inputName") Item Name 
+                    input(name="name" style="width: 85%" type="text" class="form-control" id="inputName" placeholder="Item name")
+                div(class="form-group col-lg-4")
+                    label Retail Price Range
+                    div(class="input-group" style="width: 65%")
+                        div(class="input-group-prepend")
+                            span(class="input-group-text mb-1" style="background-color: #FFF; border-right: none") $
+                        input(name="retail_price_min" type="number" class="form-control" placeholder="min")
+                        span(class="p-2") 
+                            b -  
+                        div(class="input-group-prepend")
+                            span(class="input-group-text mb-1" style="background-color: #FFF; border-right: none") $
+                        input(name="retail_price_max" type="number" class="form-control" placeholder="max")
+                div(class="form-group col-lg-4")
+                    label Stock Count Range
+                    div(class="input-group" style="width: 65%")
+                        input(name="stock_min" type="number" class="form-control" placeholder="min")
+                        span(class="p-2")
+                            b -
+                        input(name="stock_max" type="number" class="form-control" placeholder="max")
+            div(class="form-row" id="row2")
+                div(class="form-group col-lg-4")
+                    label(for="inputCategory") Category 
+                    select(name="category" style="width: 85%" class="form-control" id="inputCategory")
+                        //- Iterating through the item categories list and setting them as options
+                        each category, c in shop.itemCategories
+                            option(value=category)=category
+                div(class="form-group col-lg-4")
+                    label Buy Price Range
+                    div(class="input-group" style="width: 65%")
+                        div(class="input-group-prepend")
+                            span(class="input-group-text mb-1" style="background-color: #FFF; border-right: none") $
+                        input(name="buy_price_min" type="number" class="form-control" id="inputBuyPriceMin" placeholder="min")
+                        span(class="p-2") 
+                            b -  
+                        div(class="input-group-prepend")
+                            span(class="input-group-text mb-1" style="background-color: #FFF; border-right: none;") $
+                        input(name="buy_price_max" type="number" class="form-control" id="inputBuyPriceMax" placeholder="max")
+                div(class="form-group col-lg-4")
+                    label Min Stock Range
+                    div(class="input-group" style="width: 65%")
+                        input(name="minStock_min" type="number" class="form-control" placeholder="min")
+                        span(class="p-2")
+                            b -
+                        input(name="minStock_max" type="number" class="form-control" placeholder="max")
+            div(class="form-row" id="row3")
+                div(class="form-group col-lg-4")
+                    label(for="inputManufacturer") Manufacturer 
+                    select(name="manufacturer" style="width: 85%" class="form-control" id="inputManufacturer")
+                        //- Iterating through the item categories list and setting them as options
+                        each manufacturer, c in shop.manufacturers
+                            option(value=manufacturer)=manufacturer
+            div(class="form-row" id="row4")
+                div(class="form-group col-lg-4")
+                    label(for="inputDOB") Date Last Stocked
+                        div(class="radio pt-1") 
+                            input(class="p-3" type="radio" name="stocked" checked)
+                            label(class="pl-1") Before
+                            span(class="p-3") /
+                            input(class="pl-2" type="radio" name="stocked")
+                            label(class="pl-1") After
+                    input(name="stock_date" style="width:48.5%" type="date" id="inputDOB" class="form-control")
+

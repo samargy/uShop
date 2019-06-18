@@ -2,7 +2,7 @@ extends shop-layout
 
 block content
     div(class="custom-container" style="margin-left: 1rem")
-        h1(class="position-relative " style="top: 1rem") Create an Item
+        h1(class="position-relative " style="top: 1rem") Edit Item Details
             a(class="position-relative" href="/"+shop._id+"/inventory" style="left: 3rem")
                 u(style="font-size: 70%;") Back
         div(class="row")
@@ -10,30 +10,35 @@ block content
                 h4(class="font-weight-light col-md-4" style="top: 2rem; margin-left: -0.3rem; ") Economic Details
         br
         br
-        form(action="/"+shop._id+"/addItem", method="post" enctype="multipart/form-data")
+        form(action="/"+item._id+"/editItem", method="post" enctype="multipart/form-data")
             div(class="form-row" id="row1")
                 div(class="form-group col-lg-4")
                     label(for="inputName") Item Name 
-                    input(name="name" style="width: 85%" type="text" class="form-control" id="inputName" placeholder="e.g. 'NVIDA GTX 1080'")
+                    input(name="name" style="width: 85%" type="text" class="form-control" id="inputName" value=item.name)
                 div(class="form-group col-md-3")
                     label(for="inputRetail") Retail Price 
                         i (per item)
                     div(class="input-group" style="width: 65%")
                         div(class="input-group-prepend")
                             span(class="input-group-text" style="background-color: #FFF; border-right: none") $
-                        input(name="retail_price" type="number" class="form-control" id="inputRetail" placeholder="84.00")
+                        input(name="retail_price" type="number" class="form-control" id="inputRetail" value=item.retail_price)
                 div(class="form-group" style="margin-left: -2rem")
                     label(for="inputEcoOrder") Economic Order Quantity 
                         i (units)
                     div(class="input-group" style="width: 65%; ")
-                        input(name="eor" type="number" class="form-control" id="inputEcoOrder" placeholder="0")
+                        input(name="eor" type="number" class="form-control" id="inputEcoOrder" value=item.eor)
             div(class="form-row" id="row2")
                 div(class="form-group col-lg-4")
                     label(for="inputCategory") Category 
                     select(name="category" style="width: 85%" class="form-control" id="inputCategory")
-                        //- Iterating through the item categories list
+                        //- Iterating through the item categories list and making the
+                        //- current category property of the item equal to the selected
+                        //- category in the select box
                         each category, c in shop.itemCategories
-                            option(value=category)=category
+                            if item.category === shop.itemCategories[c]
+                                option(value=category selected)=category
+                            else
+                                option(value=category)=category
                 a(class="position-relative" href="/"+shop._id+"/editCats" style="margin-left: -3rem; margin-right: 1.1rem; top: 40px")
                     u Edit   
                 div(class="form-group col-md-3")
@@ -42,26 +47,29 @@ block content
                     div(class="input-group" style="width: 65%")
                         div(class="input-group-prepend")
                             span(class="input-group-text" style="background-color: #FFF; border-right: none") $
-                        input(name="buy_price" type="number" class="form-control" id="inputBuy" placeholder="84.00")
+                        input(name="buy_price" type="number" class="form-control" id="inputBuy" value=item.buy_price)
                 div(class="form-group" style="margin-left: -2rem")
-                    label(for="inputInitial") Initial Stock         
+                    label(for="inputStock") Stock         
                         i (units)
                     div(class="input-group" style="width: 80%;")
-                        input(name="initialStock" type="number" class="form-control" id="inputInitial" placeholder="0")
+                        input(name="stock" type="number" class="form-control" id="inputInitial" value=item.stock)
             div(class="form-row" id="row3")
                 div(class="form-group col-lg-4")
                     label(for="inputManufacturer") Manufacturer 
                     select(name="manufacturer" style="width: 85%" class="form-control" id="inputManufacturer")
-                        each manufacturer, i in shop.manufacturers
-                            option(value=manufacturer)=manufacturer
+                        each manufacturer, c in shop.manufacturers
+                            if item.manufacturer === manufacturer
+                                option(value=manufacturer selected)=manufacturer
+                            else
+                                option(value=manufacturer)=manufacturer
                 a(class="position-relative" href="/"+shop._id+"/editManus" style="margin-left: -3rem; margin-right: 1.1rem; top: 40px")
                     u Edit  
                 div(class="form-group col-lg-4")
                     label(for="inputMinStock") Minimum Stock Threshold 
                         i (units)
-                    input(name="minStock" class="custom-form-control-range mt-3 slider" type="range" id="inputMinStock" style="width: 70%;" min=0 max=10000)
+                    input(value=item.minStock name="minStock" class="custom-form-control-range mt-3 slider" type="range" id="inputMinStock" style="width: 70%;" min=0 max=10000)
                     br
-                    output(class="container text-center" id="sliderValue" style="width: 70%") 5000
+                    output(class="container text-center" id="sliderValue" style="width: 70%")=item.minStock
                 //- Slider value script
                 script.
                     document.getElementById('inputMinStock').oninput = function() {
@@ -71,13 +79,26 @@ block content
             div(class="form-row" id="row4")
                 div(class="form-group col-lg-4")
                     label(for="inputDesc") Description
-                    textarea(name="desc" type="textarea"  style="width: 85%" class="form-control")
-                div(class="form-group col-lg-4")
-                    label(for="imageFile") Upload Item Image
-                    br
-                    input(id="imageFile" name="imageFile" class="custom-file-input" type="file" accept="image/*")
-                    label(id="imageLabelText" class="custom-file-label position-relative" style="top:-1.8rem; width: 300px" for="imageFile") Choose your logo
+                    textarea(name="desc" type="textarea"  style="width: 85%" class="form-control")=item.desc
             
+            div(class="form-row" id="row5")
+                div(class="form-group col-lg-4 offset-lg-9")
+                    input(style="position: relative; height: 60px; width: 290px; background-color: #1D3557; color: white; border-radius: 10px; font-size: 190%; top: -3rem; " type="submit" value="Update Item" id="submit")
+        
+            div(class="form-group col-lg-4 offset-lg-10 position-relative" style="margin-top: -32rem; left: -5rem")
+                - const imgSize = 200;
+
+                //- using a placeholder img if there is no img for the item
+                if (!item.img)
+                    img(src="/photo-storage/placeholderimage-icon.png" style="max-width: "+imgSize+"px; max-height: "+imgSize+"px; left: -20px" class="border border-dark rounded position-relative")
+                else 
+                    img(src="/photo-storage/"+item.img style="max-width: "+imgSize+"px; max-height: "+imgSize+"px; left: -20px" class="border border-dark rounded position-relative")
+                
+                //- wrapping the little choose your file box in an input
+                div(class="custom-file" style="left: -20px; margin-top: 10px; width: 70%")
+                    input(id="imageFile" name="imageFile" class="custom-file-input" type="file" accept="image/*")
+                    label(id="imageLabelText" class="custom-file-label" for="imageFile") Choose item image
+
                 //- Changing the name of the text to file name
                 script.
                     $(document).on('change', ':file', function(){
@@ -91,7 +112,3 @@ block content
                             $('#imageLabelText').text(label)
                         })
                     })
-            
-            div(class="form-row" id="row5")
-                div(class="form-group col-lg-4 offset-lg-8")
-                    input(style="position: relative; height: 60px; width: 350px; background-color: #1D3557; color: white; border-radius: 10px; font-size: 190%; top: -3rem " type="submit" value="Create Item" id="submit")

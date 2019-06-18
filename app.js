@@ -301,11 +301,13 @@ app.post('/:id/shopEditAcc', async function(req, res) {
         //thats not its current id. The $ne paramater makes sure
         //it isn't also searching for the current shops name.
         const shopNameResult = await Shop.findOne({name: data.name, _id: { $ne: shopId}});
+
         //Searching for Shop with same email and storing in variable.
         //Also applying the same $ne logic described above
         const shopEmailResult = await Shop.findOne({email: data.email, _id: { $ne: shopId}})
 
         //Data Validation
+
         if(data.email !== data.reEmail) {
             if(data.password !== data.rePassword) {
                 //Tell user they need to have matching email and password
@@ -326,6 +328,8 @@ app.post('/:id/shopEditAcc', async function(req, res) {
             //Tell the user a shop with that email already exists
             return res.redirect('shopHome/alreadyExist/email')
         }
+        //end of data validation
+
         else {
 
             
@@ -367,9 +371,8 @@ app.post('/:id/shopEditAcc', async function(req, res) {
                 }
             })
             updatedShop.img = shop._id + 'logo' + '.' + ext
-            console.log(updatedShop.img)
         }
-        console.log(req)
+
             //Making the query for the update function
             const updateQuery = {_id: shopId}
 
@@ -631,7 +634,6 @@ app.get('/:id/editManus', async function(req, res) {
 
      //Searching for the shop and setting it as a variable 
     const shop = await Shop.findById(id)
-    console.log(shop.manufacturers);
 
     res.render('addManus', {
         shop: shop,
@@ -685,6 +687,8 @@ app.get('/:id/editManus/deletemanufacturer/:index', async function(req, res) {
     //Removing the manufacturer out of the array
     updatedShop.manufacturers.splice(manuIndex,1)
 
+    //Updating the object with the manufacturers array now without the deleted
+    //manufacturer
     Shop.updateOne(updateQuery, updatedShop, async function(err) {
         if(err) {
             console.log(err)
@@ -699,7 +703,151 @@ app.get('/:id/editManus/deletemanufacturer/:index', async function(req, res) {
 
 });
 
+//Removing an item page
+app.get('/:id/inventory/:pageType', async function(req, res) {
 
+    //Setting the shop id as a variable
+    const id = req.params.id
+
+    //Searching for the shop and setting it as a variable 
+    const shop = await Shop.findById(id)
+
+    //Getting the items
+    const itemsFound = await Item.find({shopId: id})
+     
+    //Setting the page type from the params as a variable
+    const pType = req.params.pageType
+
+    console.log(pType);
+
+    if(pType === 'removeItems') {
+        res.render('inventory-removeItems', {
+            shop: shop,
+            items: itemsFound
+        })
+    }
+    
+});
+
+//Delete an item route
+app.get('/:itemId/removeItem', async function(req, res) {
+
+    //setting item id to a variable 
+    const itemId = req.params.itemId;
+
+    //searching for the item and looking what shop its from, this is used to
+    //load the page later. NOTE: the .shopId bit is because it returns the item id as well
+    const shopId = await (await Item.findById({_id: itemId}, 'shopId')).shopId;
+
+    //Deleting the item
+    Item.findByIdAndDelete({_id: itemId}, async function(err){
+        if(err) {
+            console.log(err)
+        }
+        else {
+            //if successful load the remove items page, the code that follows is
+            //in the route above
+            res.redirect('/'+shopId+'/inventory/removeItems')
+        }
+    })
+
+});
+
+//Edit an item route
+app.get('/:id/editItem', async function(req, res) {
+
+    //Setting the item id as the id data from params
+    const itemId = req.params.id
+
+    //Getting the item with corresponding id
+    const item = await Item.findById(itemId)
+
+    //Getting the shop id from the item object
+    const shopId = item.shopId
+
+    //Searching for the shop and setting it as a variable 
+    const shop = await Shop.findById(shopId)
+
+    res.render('editItem', {
+        shop: shop,
+        item: item
+    })
+
+});
+
+app.post('/:id/editItem', async function(req, res) {
+
+    //setting the item id as a variable
+    const itemId = req.params.id
+
+    //searches for an item with the id, and then returns the
+    //shop id associated with it. 
+    //For more info read this same procedure
+    //in the get route for removing an item
+    const shopId =  await (await Item.findById({_id: itemId}, 'shopId')).shopId;
+
+    //making an empty item object to put all the fields in.
+    let updatedItem = {}
+
+    //setting all the data recieved to a simple variable called data
+    const data = req.body
+
+    //setting the fields
+    updatedItem.name = data.name
+    updatedItem.category = data.category
+    updatedItem.manufacturer = data.manufacturer
+    updatedItem.desc = data.desc
+    updatedItem.retail_price = data.retail_price
+    updatedItem.buy_price = data.buy_price
+    updatedItem.eor = data.eor
+    updatedItem.stock = data.stock
+    updatedItem.minStock = data.minStock
+
+    //updating the image (if there is one posted)
+    if((req.files) != null) {
+        
+        //Saving the image 
+
+        //making the image a variable
+        let itemImg = req.files.imageFile
+
+        //getting the extension of the image
+        const ext = itemImg.mimetype.split('/')[1]
+
+        //saving it over the current image
+        itemImg.mv(path.join(__dirname, 'public/photo-storage/'+ itemId + 'itemImg.'+ ext), function(err) {
+            if (err) {
+                console.log(err)
+            }
+        })   
+    }
+    
+    //Updating the item in the database
+    Item.updateOne({_id: itemId}, updatedItem, async function(err) {
+        if(err) {
+            console.log(err)
+        }
+        else {
+            console.log('Updated Item ---> id: '+itemId)
+
+            //return to inventory page
+            return res.redirect('/'+shopId+'/inventory')
+        }
+    })
+});
+
+app.get('/:id/findItems', async function(req, res) {
+
+    //id of the shop
+    const id = req.params.id
+
+    //finding the shop
+    const shop = await Shop.findById(id)
+
+    res.render('findItem', {
+        shop: shop
+    })
+});
 
 //Getting the date function
 function getDate() {
