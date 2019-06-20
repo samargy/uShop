@@ -11,7 +11,7 @@ block content
                 h4(class="font-weight-light col-md-4" style="top: 2rem; margin-left: -0.3rem; ") Economic Details
         br
         br
-        form(action="/"+shop._id+"/findItem", method="post" enctype="multipart/form-data")
+        form(action="/"+shop._id+"/findItems", method="post" enctype="multipart/form-data")
             div(class="form-row" id="row1")
                 div(class="form-group col-lg-4")
                     label(for="inputName") Item Name 
@@ -21,19 +21,19 @@ block content
                     div(class="input-group" style="width: 65%")
                         div(class="input-group-prepend")
                             span(class="input-group-text mb-1" style="background-color: #FFF; border-right: none") $
-                        input(name="retail_price_min" type="number" class="form-control" placeholder="min")
+                        input(id="retail_price_min" name="retail_price_min" type="number" class="form-control" placeholder="min")
                         span(class="p-2") 
                             b -  
                         div(class="input-group-prepend")
                             span(class="input-group-text mb-1" style="background-color: #FFF; border-right: none") $
-                        input(name="retail_price_max" type="number" class="form-control" placeholder="max")
+                        input(id="retail_price_max" name="retail_price_max" type="number" class="form-control" placeholder="max")
                 div(class="form-group col-lg-4")
                     label Stock Count Range
                     div(class="input-group" style="width: 65%")
-                        input(name="stock_min" type="number" class="form-control" placeholder="min")
+                        input(id="stock_min" name="stock_min" type="number" class="form-control" placeholder="min")
                         span(class="p-2")
                             b -
-                        input(name="stock_max" type="number" class="form-control" placeholder="max")
+                        input(id="stock_max" name="stock_max" type="number" class="form-control" placeholder="max")
             div(class="form-row" id="row2")
                 div(class="form-group col-lg-4")
                     label(for="inputCategory") Category 
@@ -46,19 +46,19 @@ block content
                     div(class="input-group" style="width: 65%")
                         div(class="input-group-prepend")
                             span(class="input-group-text mb-1" style="background-color: #FFF; border-right: none") $
-                        input(name="buy_price_min" type="number" class="form-control" id="inputBuyPriceMin" placeholder="min")
+                        input(id="buy_price_min" name="buy_price_min" type="number" class="form-control" placeholder="min")
                         span(class="p-2") 
                             b -  
                         div(class="input-group-prepend")
                             span(class="input-group-text mb-1" style="background-color: #FFF; border-right: none;") $
-                        input(name="buy_price_max" type="number" class="form-control" id="inputBuyPriceMax" placeholder="max")
+                        input(id="buy_price_max" name="buy_price_max" type="number" class="form-control"  placeholder="max")
                 div(class="form-group col-lg-4")
                     label Min Stock Range
                     div(class="input-group" style="width: 65%")
-                        input(name="minStock_min" type="number" class="form-control" placeholder="min")
+                        input(id="minStock_min" name="minStock_min" type="number" class="form-control" placeholder="min")
                         span(class="p-2")
                             b -
-                        input(name="minStock_max" type="number" class="form-control" placeholder="max")
+                        input(id="minStock_max" name="minStock_max" type="number" class="form-control" placeholder="max")
             div(class="form-row" id="row3")
                 div(class="form-group col-lg-4")
                     label(for="inputManufacturer") Manufacturer 
@@ -76,4 +76,8 @@ block content
                             input(class="pl-2" type="radio" name="stocked")
                             label(class="pl-1") After
                     input(name="stock_date" style="width:48.5%" type="date" id="inputDOB" class="form-control")
+                div(class="form-group col-lg-4 offset-lg-8")
+                    input(style="position: relative; height: 60px; width: 350px; background-color: #087DB7; color: white; border-radius: 10px; font-size: 190%; top: -3rem " type="submit" value="Find Item(s)" id="submit")
+
+    script(src="/js/findItemvalidation.js")
 
