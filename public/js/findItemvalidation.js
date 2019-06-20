@@ -73,3 +73,20 @@ $('#stock_max').change(function(){
             stockMax.value = Number(stockMin.value) + 1;
         }
 });
+
+$('#minStock_min').change(function(){
+    if(minStockMax.value != 0){
+        if(minStockMax.value < minStockMin.value){
+            alert('Please keep the maximum value greater than or equal to the minimum value')
+            minStockMax.value = Number(minStockMin.value) + 1;
+        }
+    }
+});
+
+$('#minStock_max').change(function(){
+        if(minStockMax.value < minStockMin.value){
+            alert('Please keep the maximum value greater than or equal to the minimum value')
+            minStockMax.value = Number(minStockMin.value) + 1;
+        }
+});
+
