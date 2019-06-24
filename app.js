@@ -844,8 +844,63 @@ app.get('/:id/findItems', async function(req, res) {
     //finding the shop
     const shop = await Shop.findById(id)
 
+    //rendering find item page
     res.render('findItem', {
         shop: shop
+    })
+});
+
+app.post('/:id/findItems', async function(req, res) {
+
+    //id of the shop
+    const id = req.params.id
+    console.log(id)
+
+    //finding the shop
+    const shop = await Shop.findById(id)
+
+    //Return all items in the shops inventory as an Array
+    const itemsFound = await Item.find({shopId: id})
+    const itemCount = itemsFound.length
+
+    //Getting the data from the form and making conditions for the
+    //search function
+    const data = req.body
+    let conditions = {}
+
+    //Here we set the field to '*' meaning wildcard e.sg can be anything
+    //If the field is empty
+    //Then if the field isn't empty just set the condition to the field
+    if(data.name === ''){
+        conditions.name = "*"
+    }
+    else {
+        conditions.name = data.name;
+    }
+    if(data.category === ''){
+        conditions.category = "*"
+    }
+    else {
+        conditions.category = data.category
+    }
+    if(data.manufacturer === ''){
+        conditions.manufacturer = "*"
+    }
+    else {
+        conditions.manufacturer = data.manufacturer
+    }
+
+
+
+
+    //LINEAR SEARCH FUNCTION -> conditions is an object
+    linearSearchItems(conditions)
+
+
+    res.render('foundItems', {
+        shop: shop,
+        items: itemsFound,
+        itemCount: itemCount
     })
 });
 
@@ -860,4 +915,8 @@ function getDate() {
     let DateString = d + '/' + m + '/' + y
     
     return DateString;
+}
+
+function linearSearchItems(conditions) {
+
 }

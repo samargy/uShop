@@ -1,0 +1,35 @@
+extends shop-layout
+
+block content 
+    div(class="custom-container" style="margin-left: 1rem")
+        h1(class="position-relative " style="top: 1rem") Found #{itemCount} Item(s)
+            a(class="position-relative" href="/"+shop._id+"/findItems" style="left: 3rem")
+                u(style="font-size: 70%;") Back
+        br
+        br
+        table(class="table" style="width: 85%")
+            thead
+                th(scope="col") Image
+                th(scope="col") Name
+                th(scope="col") Category
+                th(scope="col") Manufacturer
+                th(scope="col") In Stock
+                th(scope="col") Retail Price
+                th(scope="col") Buy Price
+                th(scope="col") Last Stocked
+            tbody
+                //-loading in the items
+                each item, i in items
+                    tr
+                        td
+                            img(src="/photo-storage/"+item.img style="max-width: 80px; max-height: 50px")
+                        td=item.name
+                        td=item.category
+                        td=item.manufacturer
+                        td=item.stock
+                        td $#{item.retail_price}
+                        td $#{item.buy_price}
+                        td=item.stock_date
+                        td
+                            a(href="/"+item._id +"/editItem") 
+                                u Edit
