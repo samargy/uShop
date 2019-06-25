@@ -364,7 +364,7 @@ app.post('/:id/shopEditAcc', async function(req, res) {
             //Saving the image
             let shopImg = req.files.imageFile
             //getting the extension of it
-            const ext = shopImg.mimetype.split('/')[1];
+            const ext = getFileExt(shopImg.mimetype);
             shopImg.mv(path.join(__dirname,'public/photo-storage/'+ shop._id + 'logo' + '.' + ext), function(err){
                 if(err) {
                     console.log(err)
@@ -513,7 +513,7 @@ app.post('/:id/addItem', async function(req, res) {
         //Saving the image
         let itemImg = req.files.imageFile
         //getting the extension of it
-        const ext = itemImg.mimetype.split('/')[1];
+        const ext = getFileExt(itemImg.mimetype);
 
         //Moving the file to the photostorage folder
         //It is named as the items id and ending with itemImg + ext
@@ -812,7 +812,7 @@ app.post('/:id/editItem', async function(req, res) {
         let itemImg = req.files.imageFile
 
         //getting the extension of the image
-        const ext = itemImg.mimetype.split('/')[1]
+        const ext = getFileExt(itemImg.mimetype)
 
         //saving it over the current image
         itemImg.mv(path.join(__dirname, 'public/photo-storage/'+ itemId + 'itemImg.'+ ext), function(err) {
@@ -854,7 +854,6 @@ app.post('/:id/findItems', async function(req, res) {
 
     //id of the shop
     const id = req.params.id
-    console.log(id)
 
     //finding the shop
     const shop = await Shop.findById(id)
@@ -868,8 +867,7 @@ app.post('/:id/findItems', async function(req, res) {
     const data = req.body
     let conditions = {}
 
-    //Here we set the field to '*' meaning wildcard e.sg can be anything
-    //If the field is empty
+    //Here we set the field to '*' meaning wildcard e.g can be anything only If the field is empty
     //Then if the field isn't empty just set the condition to the field
     if(data.name === ''){
         conditions.name = "*"
@@ -890,8 +888,64 @@ app.post('/:id/findItems', async function(req, res) {
         conditions.manufacturer = data.manufacturer
     }
 
+    //Date stocked condition
 
+    //if the date field isn't empty, then set it as a date
+    if(!(data.stock_date == '')){
+        
+        //Making a date object so we can compare in the search function
+        conditions.stock_date = new Date(data.stock_date)
+    }
+    //else, make it a wildcard
+    else {
+        conditions.stock_date = '*'
+    }
 
+    //Setting the stocked condition to either before or after,
+    //depending on the field sent through from the client
+    if(data.stocked == 'before'){
+        conditions.stocked = 'before'
+    }
+    if(data.stocked == 'after'){
+        conditions.stocked = 'after'
+    }
+
+    //First checks if the min and max are actually min and max
+
+    if((data.retail_price_min <= data.retail_price_max)){
+        //Setting the 'range' as an array when element 0 is the min and element 1 is the max
+        conditions.retail_price_range = [data.retail_price_min, data.retail_price_max]
+    }
+    else{
+        conditions.retail_price_range = '*'
+    }
+
+    //Do the same as above
+    if(data.buy_price_min <= data.buy_price_max){
+        //Setting the 'range' as an array when element 0 is the min and element 1 is the max
+        conditions.buy_price_range = [data.buy_price_min, data.buy_price_max]
+    }
+    else{
+        conditions.buy_price_range = '*'
+    }
+
+    //Do the same as above
+    if(data.stock_min <= data.stock_max){
+        //Setting the 'range' as an array when element 0 is the min and element 1 is the max
+        conditions.stock_range = [data.stock_min, data.stock_max]
+    }
+    else{
+        conditions.stock_range = '*'
+    }
+
+    //Do the same as above
+    if(data.minStock_min <= data.minStock_max){
+        //Setting the 'range' as an array when element 0 is the min and element 1 is the max
+        conditions.minStock_range = [data.minStock_min, data.minStock_max]
+    }
+
+    console.log('CONDITIONS OBJECT')
+    console.log(conditions)
 
     //LINEAR SEARCH FUNCTION -> conditions is an object
     linearSearchItems(conditions)
@@ -904,19 +958,65 @@ app.post('/:id/findItems', async function(req, res) {
     })
 });
 
-//Getting the date function
+
+
+function linearSearchItems(conditions) {
+    
+}
+
+
+
+
+//Getting the date function 
+/**
+ * This function assembles the date a string in the format DD/MM/YYYY
+ * it uses the javaScript Date() object to retrieve the current date
+ * and formats ...
+ */
 function getDate() {
     let date = new Date(); 
 
+    //Getting the day
     let d = date.getDate();
+
+    //Getting the month
     let m = date.getMonth();
+
+    //Getting the year
     let y = date.getFullYear();
 
+    //THIS IS STRING MANIPULATION - Concatenating together string bits
     let DateString = d + '/' + m + '/' + y
     
     return DateString;
 }
 
-function linearSearchItems(conditions) {
+//THIS IS A STRING MANIPULATION FUNCTION TO GET THE FILE EXTENSION
+/**
+ * 
+ * 
+ */
 
+function getFileExt(mimetype){
+
+    const StringLength = mimetype.length;
+    let CharacterIndex = 0;
+    let extensionString = ''
+    let lookingAtFileExt = false;
+
+    while(CharacterIndex < StringLength){
+        if(lookingAtFileExt == true){
+             extensionString = extensionString + mimetype[CharacterIndex]
+        }
+        if(mimetype[CharacterIndex] == '/'){
+            lookingAtFileExt = true;
+        }
+        CharacterIndex++;
+    }
+
+    return extensionString;
 }
+
+
+
+

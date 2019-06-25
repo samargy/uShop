@@ -72,14 +72,16 @@ block content
                 div(class="form-group col-lg-4")
                     label(for="inputDOB") Date Last Stocked
                         div(class="radio pt-1") 
-                            input(class="p-3" type="radio" name="stocked" checked)
+                            input(id="sBefore" class="p-3" type="radio" name="stockedRadio" checked)
                             label(class="pl-1") Before
                             span(class="p-3") /
-                            input(class="pl-2" type="radio" name="stocked")
+                            input(id="sAfter" class="pl-2" type="radio" name="stockedRadio")
                             label(class="pl-1") After
+                            input(type="hidden", name="stocked" value='before' id="hiddenStocked")
                     input(name="stock_date" style="width:48.5%" type="date" id="inputDOB" class="form-control")
                 div(class="form-group col-lg-4 offset-lg-8")
                     input(style="position: relative; height: 60px; width: 350px; background-color: #087DB7; color: white; border-radius: 10px; font-size: 190%; top: -3rem " type="submit" value="Find Item(s)" id="submit")
 
     script(src="/js/findItemvalidation.js")
+    script(src="/js/radioButtonExclusive.js")
 
