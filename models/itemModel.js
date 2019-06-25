@@ -10,7 +10,7 @@ var itemSchema = new Schema ({
     buy_price: Number,
     img: String,
     stock: Number,
-    stock_date: String,
+    stock_date: Date,
     minStock: Number,
     eor: Number,
     desc: String

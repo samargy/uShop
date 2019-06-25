@@ -17,6 +17,11 @@ block content
             tbody
                 //-loading in the items
                 each item, i in items
+                    //Formating the date field
+                    - let d = item.stock_date.getDate()
+                    - let m = item.stock_date.getMonth()
+                    - let y = item.stock_date.getFullYear()
+                    - let date = d + '/' + m + '/' + y
                     tr
                         td
                             img(src="/photo-storage/"+item.img style="max-width: 80px; max-height: 50px")

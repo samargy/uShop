@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const fileUpload = require('express-fileupload');
 const port = 3000;
+const moment = require('moment')
 
 //file Upload middleware
 app.use(fileUpload())
@@ -500,7 +501,7 @@ app.post('/:id/addItem', async function(req, res) {
     item.stock = data.initialStock;
 
     //Setting the intial stock date to today
-    item.stock_date = getDate();
+    item.stock_date = Date(Date.now());
 
     item.minStock = data.minStock;
     item.eor = data.eor;
@@ -525,7 +526,7 @@ app.post('/:id/addItem', async function(req, res) {
         //Setting the file name as a field in the item object
         item.img = item._id + 'itemImg' + '.' + ext
         
-    }1
+    }
 
     //Saving the item to the db
     item.save(function(err) {
@@ -858,48 +859,19 @@ app.post('/:id/findItems', async function(req, res) {
     //finding the shop
     const shop = await Shop.findById(id)
 
-    //Return all items in the shops inventory as an Array
-    const itemsFound = await Item.find({shopId: id})
-    const itemCount = itemsFound.length
-
     //Getting the data from the form and making conditions for the
     //search function
     const data = req.body
     let conditions = {}
 
-    //Here we set the field to '*' meaning wildcard e.g can be anything only If the field is empty
-    //Then if the field isn't empty just set the condition to the field
-    if(data.name === ''){
-        conditions.name = "*"
-    }
-    else {
-        conditions.name = data.name;
-    }
-    if(data.category === ''){
-        conditions.category = "*"
-    }
-    else {
-        conditions.category = data.category
-    }
-    if(data.manufacturer === ''){
-        conditions.manufacturer = "*"
-    }
-    else {
-        conditions.manufacturer = data.manufacturer
-    }
-
     //Date stocked condition
-
-    //if the date field isn't empty, then set it as a date
+    //if the date field isn't empty, then set it as a date object
     if(!(data.stock_date == '')){
-        
+
         //Making a date object so we can compare in the search function
         conditions.stock_date = new Date(data.stock_date)
     }
-    //else, make it a wildcard
-    else {
-        conditions.stock_date = '*'
-    }
+
 
     //Setting the stocked condition to either before or after,
     //depending on the field sent through from the client
@@ -912,43 +884,68 @@ app.post('/:id/findItems', async function(req, res) {
 
     //First checks if the min and max are actually min and max
 
-    if((data.retail_price_min <= data.retail_price_max)){
+    if((Number(data.retail_price_min) <= Number(data.retail_price_max))){
+        console.log('range has been set')
         //Setting the 'range' as an array when element 0 is the min and element 1 is the max
         conditions.retail_price_range = [data.retail_price_min, data.retail_price_max]
     }
-    else{
-        conditions.retail_price_range = '*'
-    }
+
 
     //Do the same as above
-    if(data.buy_price_min <= data.buy_price_max){
+    if(Number(data.buy_price_min) <= Number(data.buy_price_max)){
         //Setting the 'range' as an array when element 0 is the min and element 1 is the max
         conditions.buy_price_range = [data.buy_price_min, data.buy_price_max]
     }
-    else{
-        conditions.buy_price_range = '*'
-    }
+
 
     //Do the same as above
-    if(data.stock_min <= data.stock_max){
+    if(Number(data.stock_min) <= Number(data.stock_max)){
         //Setting the 'range' as an array when element 0 is the min and element 1 is the max
         conditions.stock_range = [data.stock_min, data.stock_max]
     }
-    else{
-        conditions.stock_range = '*'
-    }
 
     //Do the same as above
-    if(data.minStock_min <= data.minStock_max){
+    if(Number(data.minStock_min) <= Number(data.minStock_max)){
         //Setting the 'range' as an array when element 0 is the min and element 1 is the max
         conditions.minStock_range = [data.minStock_min, data.minStock_max]
     }
 
     console.log('CONDITIONS OBJECT')
     console.log(conditions)
+    console.log(moment(conditions.stock_date).toDate())
 
-    //LINEAR SEARCH FUNCTION -> conditions is an object
-    linearSearchItems(conditions)
+    //Return all items in the shops inventory as an Array
+    // const itemsFound = await Item.find({shopId: id})
+    const itemsFound = await findItems()
+
+    function findItems() {
+        if((conditions.stocked == 'before') && (data.name != '') && (data.category != '') && (data.manufacturer != '') && (data.stock_date != '') && (conditions.retail_price_range != ['', '']) && (conditions.buy_price_range != ['', '']) && (conditions.stock_range != ['', '']) && (conditions.minStock_range != ['', ''])){
+            console.log('tried to run')
+            return Item.find({
+                shopId: id,
+                name: data.name,
+                category: data.category,
+                manufacturer: data.manufacturer,
+
+                //Here we query for 'Less than or equal to the date query'd since we are asking
+                //for before
+                stock_date: { $lte: conditions.stock_date}, 
+
+                //Here we query for both greater than or equal too AND less than and equal to
+                //this is so we can have a range. 
+                // retail_price_range[0] is the min and [1] is the max
+                //We do the same for 
+                retail_price: {$gte: conditions.retail_price_range[0],
+                                $lte: conditions.retail_price_range[1]},
+                buy_price: {$gte: conditions.buy_price_range[0],
+                                $lte: conditions.buy_price_range[1]}             
+            })
+        }
+    }   
+    console.log(itemsFound)
+
+
+    const itemCount = itemsFound.length
 
 
     res.render('foundItems', {
@@ -963,8 +960,6 @@ app.post('/:id/findItems', async function(req, res) {
 function linearSearchItems(conditions) {
     
 }
-
-
 
 
 //Getting the date function 

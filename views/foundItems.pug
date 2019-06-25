@@ -20,6 +20,11 @@ block content
             tbody
                 //-loading in the items
                 each item, i in items
+                    //Formating the date field
+                    - let d = item.stock_date.getDate()
+                    - let m = item.stock_date.getMonth()
+                    - let y = item.stock_date.getFullYear()
+                    - let date = d + '/' + m + '/' + y
                     tr
                         td
                             img(src="/photo-storage/"+item.img style="max-width: 80px; max-height: 50px")
@@ -29,7 +34,7 @@ block content
                         td=item.stock
                         td $#{item.retail_price}
                         td $#{item.buy_price}
-                        td=item.stock_date
+                        td #{date}
                         td
                             a(href="/"+item._id +"/editItem") 
                                 u Edit
