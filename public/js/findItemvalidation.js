@@ -28,7 +28,7 @@ const minStockMax = document.getElementById('minStock_max')
 
 $('#retail_price_min').change(function(){
     if(retailMax.value != 0){
-        if(retailMax.value < retailMin.value){
+        if(Number(retailMax.value) < Number(retailMin.value)){
             alert('Please keep the maximum value greater than or equal to the minimum value')
             retailMax.value = Number(retailMin.value) + 1;
         }
@@ -36,7 +36,7 @@ $('#retail_price_min').change(function(){
 });
 
 $('#retail_price_max').change(function(){
-        if(retailMax.value < retailMin.value){
+        if(Number(retailMax.value) < Number(retailMin.value)){
             alert('Please keep the maximum value greater than or equal to the minimum value')
             retailMax.value = Number(retailMin.value) + 1;
         }
@@ -44,7 +44,7 @@ $('#retail_price_max').change(function(){
 
 $('#buy_price_min').change(function(){
     if(buyMax.value != 0){
-        if(buyMax.value < buyMin.value){
+        if(Number(buyMax.value) < Number(buyMin.value)){
             alert('Please keep the maximum value greater than or equal to the minimum value')
             buyMax.value = Number(buyMin.value) + 1;
         }
@@ -52,7 +52,7 @@ $('#buy_price_min').change(function(){
 });
 
 $('#buy_price_max').change(function(){
-        if(buyMax.value < buyMin.value){
+        if(Number(buyMax.value) < Number(buyMin.value)){
             alert('Please keep the maximum value greater than or equal to the minimum value')
             buyMax.value = Number(buyMin.value) + 1;
         }
@@ -60,7 +60,7 @@ $('#buy_price_max').change(function(){
 
 $('#stock_min').change(function(){
     if(stockMax.value != 0){
-        if(stockMax.value < stockMin.value){
+        if(Number(stockMax.value) < Number(stockMin.value)){
             alert('Please keep the maximum value greater than or equal to the minimum value')
             stockMax.value = Number(stockMin.value) + 1;
         }
@@ -68,7 +68,7 @@ $('#stock_min').change(function(){
 });
 
 $('#stock_max').change(function(){
-        if(stockMax.value < stockMin.value){
+        if(Number(stockMax.value) < Number(stockMin.value)){
             alert('Please keep the maximum value greater than or equal to the minimum value')
             stockMax.value = Number(stockMin.value) + 1;
         }
@@ -76,7 +76,7 @@ $('#stock_max').change(function(){
 
 $('#minStock_min').change(function(){
     if(minStockMax.value != 0){
-        if(minStockMax.value < minStockMin.value){
+        if(Number(minStockMax.value) < Number(minStockMin.value)){
             alert('Please keep the maximum value greater than or equal to the minimum value')
             minStockMax.value = Number(minStockMin.value) + 1;
         }
@@ -84,7 +84,7 @@ $('#minStock_min').change(function(){
 });
 
 $('#minStock_max').change(function(){
-        if(minStockMax.value < minStockMin.value){
+        if(Number(minStockMax.value) < Number(minStockMin.value)){
             alert('Please keep the maximum value greater than or equal to the minimum value')
             minStockMax.value = Number(minStockMin.value) + 1;
         }

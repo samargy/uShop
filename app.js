@@ -910,6 +910,12 @@ app.post('/:id/findItems', async function(req, res) {
         conditions.minStock_range = [data.minStock_min, data.minStock_max]
     }
 
+    //Do the same as above
+    if(Number(data.eor_min) <= Number(data.eor_max)){
+        //Setting the 'range' as an array when element 0 is the min and element 1 is the max
+        conditions.eor_range = [data.eor_min, data.eor_max]
+    }
+
     console.log('CONDITIONS OBJECT')
     console.log(conditions)
     console.log(moment(conditions.stock_date).toDate())
@@ -919,8 +925,7 @@ app.post('/:id/findItems', async function(req, res) {
     const itemsFound = await findItems()
 
     function findItems() {
-        if((conditions.stocked == 'before') && (data.name != '') && (data.category != '') && (data.manufacturer != '') && (data.stock_date != '') && (conditions.retail_price_range != ['', '']) && (conditions.buy_price_range != ['', '']) && (conditions.stock_range != ['', '']) && (conditions.minStock_range != ['', ''])){
-            console.log('tried to run')
+        if((conditions.stocked == 'before') && (data.name != '') && (data.category != '') && (data.manufacturer != '') && (data.stock_date != '') && (conditions.retail_price_range != ['', '']) && (conditions.buy_price_range != ['', '']) && (conditions.stock_range != ['', '']) && (conditions.minStock_range != ['', ''])&& (conditions.eor_range != ['', ''])){
             return Item.find({
                 shopId: id,
                 name: data.name,
@@ -931,21 +936,33 @@ app.post('/:id/findItems', async function(req, res) {
                 //for before
                 stock_date: { $lte: conditions.stock_date}, 
 
-                //Here we query for both greater than or equal too AND less than and equal to
-                //this is so we can have a range. 
+                // Here we query for both greater than or equal too AND less than and equal to
+                // this is so we can have a range. 
                 // retail_price_range[0] is the min and [1] is the max
-                //We do the same for 
+                // We do the same for all the other ranges
                 retail_price: {$gte: conditions.retail_price_range[0],
                                 $lte: conditions.retail_price_range[1]},
                 buy_price: {$gte: conditions.buy_price_range[0],
-                                $lte: conditions.buy_price_range[1]}             
+                                $lte: conditions.buy_price_range[1]},
+                stock: {$gte: conditions.buy_price_range[0],
+                                    $lte: conditions.buy_price_range[1]},
+                minStock: {$gte: conditions.minStock_range[0],
+                                $lte: conditions.minStock_range[1]},
+                eor: {$gte: conditions.eor_range[0],
+                                    $lte: conditions.eor_range[1]}
+
             })
         }
     }   
-    console.log(itemsFound)
 
+    let itemCount
+    if(itemsFound == undefined){
+        itemCount = 0
+    }
+    else{
+        itemCount = itemsFound.length
+    }
 
-    const itemCount = itemsFound.length
 
 
     res.render('foundItems', {

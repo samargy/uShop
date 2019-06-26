@@ -68,6 +68,13 @@ block content
                         //- Iterating through the item categories list and setting them as options
                         each manufacturer, c in shop.manufacturers
                             option(value=manufacturer)=manufacturer
+                div(class="form-group col-lg-4")
+                    label EOR Range
+                    div(class="input-group" style="width: 65%")
+                        input(id="eor_min" name="eor_min" type="number" class="form-control" placeholder="min")
+                        span(class="p-2")
+                            b -
+                        input(id="eor_max" name="eor_max" type="number" class="form-control" placeholder="max")
             div(class="form-row" id="row4")
                 div(class="form-group col-lg-4")
                     label(for="inputDOB") Date Last Stocked
