@@ -30,10 +30,10 @@ block content
                         td=item.name
                         td=item.category
                         td=item.manufacturer
-                        td
-                            a(href="/"+shop.id+"/addStock/"+item._id style="font-size: 120%" class="font-weight-bold m-1") +
+                        td(class='stockgroup')
+                            a(href style="font-size: 120%" class="font-weight-bold m-1") +
                             a=item.stock
-                            a(href="/"+shop.id+"/minusStock/"+item._id style="font-size: 120%" class="font-weight-bold m-1") -
+                            a(href style="font-size: 120%" class="font-weight-bold m-1") -
                         td $#{item.retail_price}
                         td $#{item.buy_price}
                         td #{date}
@@ -48,6 +48,6 @@ block content
         a(href="/"+shop._id+"/restockItems/all" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: #1D3557; color: white; border-color: black;") Restock All
         a(href="/"+shop._id+"/restockItems/auto" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: #1D3557; color: white; border-color: black;") Autostock All
 
-
+    script(src="/js/restock.js")
 
     

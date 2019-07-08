@@ -980,6 +980,11 @@ app.get('/:id/restockItems/:mode', async function(req, res){
     const shop = await Shop.findById(id)
     const mode = req.params.mode
 
+
+
+    //Looks at what mode the page requested then performs said operations for the mode
+
+    //RESTOCK OPTIONAL MODE
     if(mode == 'option') {
     const items = await Item.find({shopId: id})
 
@@ -988,6 +993,8 @@ app.get('/:id/restockItems/:mode', async function(req, res){
         items: items
     })
 }
+
+    //RESTOCK ALL
     if(mode == 'all') {
 
     const items = await Item.find({shopId: id})
@@ -999,6 +1006,8 @@ app.get('/:id/restockItems/:mode', async function(req, res){
 
         let updatedItem = {}
         updatedItem.stock = stock + eor;
+        //Setting the date to now.
+        updatedItem.stock_date = Date(Date.now());
 
         Item.updateOne({_id: items[i]._id}, updatedItem, function(err){
             if(err){
