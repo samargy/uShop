@@ -6,11 +6,11 @@ var shopSchema = new Schema ({
     categories: Array,
     email: String,
     password: String,
-    sales: Object,
     img: String,
     itemCategories: Array,
     manufacturers: Array,
-    status: String
+    status: String,
+    balance: Number
 });
 
 
