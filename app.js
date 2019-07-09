@@ -973,6 +973,8 @@ app.post('/:id/findItems', async function(req, res) {
     })
 });
 
+
+//Restocking route
 app.get('/:id/restockItems/:mode', async function(req, res){
 
     const id = req.params.id
@@ -1055,6 +1057,7 @@ app.get('/:shopid/addStock/:itemid', async function(req, res){
         }
     })
 });
+
 //DEDUCTING 1 STOCK FROM THE ITEM MANUALLY
 app.get('/:shopid/minusStock/:itemid', async function(req, res){
 
@@ -1110,6 +1113,78 @@ app.get("/:id/deductBalance/:ammount", async function(req, res){
 
     return res.redirect("/"+id+"/restockItems/option")
 })
+
+
+app.post("/:id/inventory", async function(req, res){
+    console.log(req.body)
+})
+
+
+
+
+//user home route
+app.get('/:id/userhome', async function(req, res){
+
+    const id = req.params.id
+    const user = await User.findById(id)
+
+    res.render('userHome', {
+        user: user
+    })
+})
+
+//edit user profile route
+app.get('/:id/userProfile', async function(req, res){
+
+    const id  = req.params.id
+    const user = await User.findById(id)
+
+    res.render('userProfile', {
+        user: user
+    })
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

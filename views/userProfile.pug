@@ -1,0 +1,77 @@
+extends user-layout
+
+block content
+    div(class="custom-container" style="margin-left: 1rem")
+        h1(class="position-relative " style="top: 1rem") Your Account
+        div(class="row")
+            h4(class= "font-weight-light col-lg-4" style="top: 2rem") Personal Details
+            h4(class="font-weight-light col-md-4" style="top: 2rem; margin-left: -0.3rem; ") Account Details
+        br
+        br
+        //This form is a POST form that only submits if validateCreateForm returns true
+        form(action="/userCreateAcc" method="POST")
+            div(class="form-row")
+                div(class="form-group col-lg-4")
+                    label(for="inputGivenN") Given Name
+                    input(name="givenName" style="width: 85%" type="text" class="form-control" id="inputGivenN" value=user.givenName)
+                div(class="form-group col-lg-4"  id="emailGroup1")
+                    label(for="inputEmail") Email
+                    input(name="email" style="width: 85%" type="email" class="form-control" id="inputEmail" value=user.email)
+                    if (field === 'email') || (field === 'email+password')
+                        div(class="customValidation") Please enter a matching email
+                    if (exist == true)
+                        div(class="customValidation") The email you've entered already exists
+            div(class="form-row")
+                div(class="form-group col-lg-4")
+                    label(for="inputLastN") Last Name
+                    input(name="lastName" style="width: 85%" type="text" class="form-control" id="inputLastN" value=user.lastName)
+                div(class="form-group col-lg-4" id="emailGroup2")
+                    label(for="inputReEmail") Re-enter Email
+                    input(name="reEmail" style="width: 85%" type="email" class="form-control" id="inputReEmail" placeholder="example@uShop.com")
+                    if (field === 'email') || (field === 'email+password')
+                        div(class="customValidation") Please enter a matching email
+                    if (exist == true)
+                        div(class="customValidation") The email you've entered already exists
+            div(class="form-row")
+                div(class="form-group col-lg-4")
+                    label(for="inputAddress") Address
+                    input(name="address" style="width: 85%" type="text" class="form-control" id="inputAddress" value=user.address)
+                div(class="form-group col-lg-4" id="passwordGroup1")
+                    label(for="inputPassword") Password 
+                        i (Minimum 7 Characters)
+                    input(name="password" style="width: 85%" type="password" class="form-control" id="inputPassword" value=user.password minlength=7)
+                    if (field === 'password') || (field === 'email+password')
+                        div(class="customValidation") Please enter a matching password
+            div(class="form-row")
+                    div(class="form-group col-lg-2")
+                        label(for="inputPostcode") Postcode 
+                        input(name="postcode" style="width:80%" id="inputPostcode" type="text" class="form-control" value=user.postcode maxlength=4 minlength=4)
+                    div(class="form-group col-lg-2")
+                        label(for="inputState") State
+                        select(name="state" style="width: 68%" id="inputState" class="form-control")
+                            - let optionsArray = ['NSW','VIC', 'WA', 'SA', 'NT', 'TAS', 'ACT', 'QLD']
+                            each option, i in optionsArray
+                                    if option === user.state
+                                        option(value=option selected)=option
+                                    else
+                                        option(value=option)=option
+                    div(class="form-group col-lg-4" id="passwordGroup2")
+                        label(for="inputRePassword") Re-enter Password 
+                        input(name="rePassword" style="width: 85%" type="password" class="form-control" id="inputRePassword" placeholder="Password" minlength=7)  
+                        if (field === 'password') || (field === 'email+password')
+                            div(class="customValidation") Please enter a matching password 
+            div(class="form-row")
+                div(class="form-group col-lg-4")
+                    label(for="inputDOB") Date of Birth
+                    input(name="dob" style="width:48.5%" type="date" id="inputDOB" class="form-control")
+            div(class="form-row")
+                div(class="form-group col-lg-4")
+                    label(for="inputMobile") Mobile Number 
+                        i (10 digit)
+                    input(name="mobileNumber" style="width:85%" type="text" id="inputMobile" class="form-control" minlength=10 maxlength=10 placeholder="0439974601")
+                div(class="form-group col-lg-3")
+                    input(style="position: relative; height: 60px; width: 350px; background-color: #1D3557; color: white; border-radius: 10px; font-size: 190%; top: -60px" type="submit" value="Create Account" id="submit")
+        div(style="left: 400px; top: -400px; width: 30%" class="container text-center position-relative") 
+            h3 Wanted to create a
+            h3 shop instead?
+            a(href="/shopCreateAcc" class="font-weight-light") Click Here
