@@ -10,7 +10,8 @@ var userSchema = new Schema ({
     dob: Date,
     mobileNumber: String,
     email: String,
-    password: String
+    password: String,
+    cart: Object
 });
 
 
