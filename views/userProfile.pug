@@ -9,7 +9,7 @@ block content
         br
         br
         //This form is a POST form that only submits if validateCreateForm returns true
-        form(action="/userCreateAcc" method="POST")
+        form(action="/"+user._id+"/editUserAcc" method="POST")
             div(class="form-row")
                 div(class="form-group col-lg-4")
                     label(for="inputGivenN") Given Name
@@ -63,15 +63,15 @@ block content
             div(class="form-row")
                 div(class="form-group col-lg-4")
                     label(for="inputDOB") Date of Birth
-                    input(name="dob" style="width:48.5%" type="date" id="inputDOB" class="form-control")
+                    input(name="dob" style="width:48.5%" type="date" id="inputDOB" class="form-control" value=moment(user.dob).format('YYYY-MM-DD'))
             div(class="form-row")
                 div(class="form-group col-lg-4")
                     label(for="inputMobile") Mobile Number 
                         i (10 digit)
-                    input(name="mobileNumber" style="width:85%" type="text" id="inputMobile" class="form-control" minlength=10 maxlength=10 placeholder="0439974601")
+                    input(name="mobileNumber" style="width:85%" type="text" id="inputMobile" class="form-control" minlength=10 maxlength=10 value=user.mobileNumber)
                 div(class="form-group col-lg-3")
-                    input(style="position: relative; height: 60px; width: 350px; background-color: #1D3557; color: white; border-radius: 10px; font-size: 190%; top: -60px" type="submit" value="Create Account" id="submit")
+                    input(style="position: relative; height: 60px; width: 350px; background-color: #1D3557; color: white; border-radius: 10px; font-size: 190%; top: -60px" type="submit" value="Confirm Changes" id="submit")
         div(style="left: 400px; top: -400px; width: 30%" class="container text-center position-relative") 
-            h3 Wanted to create a
-            h3 shop instead?
-            a(href="/shopCreateAcc" class="font-weight-light") Click Here
+            h3 Want to delete 
+            h3 your account?
+            a(href="/"+user._id+"/deleteAcc" class="font-weight-light") Click Here

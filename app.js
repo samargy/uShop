@@ -131,7 +131,6 @@ app.post('/userCreateAcc', async function(req,res) {
     user.save(function(err) {
         if(err) {
             console.log(err)
-            return;
         } else {
             //Log the user has been created and direct to sign in page
             console.log("User created ---> "+user.givenName+" "+user.lastName)
@@ -405,7 +404,7 @@ app.get('/:id/shopHome/:err/:code', async function(req, res) {
 
     //The following if statements determine sending varying
     //variables to the Pug file, which renders the page
-    //differently depending on 
+    //differently depending on the errs recieved
     if(err == 'noMatch'){
     res.render('shopHome', {
         shop: shop,
@@ -1127,9 +1126,11 @@ app.get('/:id/userhome', async function(req, res){
 
     const id = req.params.id
     const user = await User.findById(id)
+    const shops = await Shop.find()
 
     res.render('userHome', {
-        user: user
+        user: user,
+        shops: shops
     })
 })
 
@@ -1140,9 +1141,106 @@ app.get('/:id/userProfile', async function(req, res){
     const user = await User.findById(id)
 
     res.render('userProfile', {
-        user: user
+        user: user,
+        moment: require('moment')
     })
 })
+
+app.post('/:id/editUserAcc', async function(req, res){
+
+    const id = req.params.id
+    const data = req.body
+
+     //Searching for User with same email and storing in variable, 
+     //thats not its current id. The $ne paramater makes sure
+     //it isn't also searching for the current shops name.
+    const userEmailResult = await User.findOne({email: data.email, _id: { $ne: id}});
+
+
+    if(data.email !== data.reEmail) {
+        if(data.password !== data.rePassword) {
+            //Tell user they need to have matching email and password
+            return res.redirect('userHome/noMatch/email+password')
+        }
+    //Tell user they need to have matching email
+    return res.redirect('userHome/noMatch/email')
+    }
+    else if(data.password !== data.rePassword) {
+        //Tell the user they need to have matching password
+        return res.redirect('userHome/noMatch/password')
+    }
+    else if (userEmailResult) {
+        //Tell the user a shop with that email already exists
+        return res.redirect('userHome/alreadyExist/email')
+    }
+
+    //If all validation succeeds - THEN
+    else {
+        let updatedUser = {}
+
+        updatedUser.givenName = data.givenName;
+        updatedUser.lastName = data.lastName;
+        updatedUser.address = data.address;
+        updatedUser.state = data.state;
+        updatedUser.postcode = data.postcode;
+        updatedUser.dob = data.dob;
+        updatedUser.email = data.email;
+        updatedUser.mobileNumber = data.mobileNumber;
+
+        User.updateOne({_id: id}, updatedUser, async function(err) {
+            if(err){
+                console.log(err)
+            }
+            else{
+                console.log('User updated -----> id: '+id)
+                return res.redirect('/'+id+'/userProfile')
+            }
+        })
+    }
+})
+
+
+app.get('/:id/userHome/:err/:code', async function(req, res){
+
+    const id = req.params.id
+
+    const user = await User.findById(id)
+
+    const err = req.params.err
+
+    //The following if statements determine sending varying
+    //variables to the Pug file, which renders the page
+    //differently depending on the errs recieved
+    if(err == 'noMatch') {
+        res.render('userProfile', {
+            user: user,
+            field: req.params.code,
+            moment: require('moment')
+        })
+    }
+    if(err == 'alreadyExist'){
+        res.render('userProfile', {
+            user: user,
+            exist: true,
+            moment: require('moment')
+        })
+    }
+})
+
+
+
+
+app.get('/:id/deleteAcc', async function(req, res){
+
+    const id = req.params.id
+
+    User.findByIdAndDelete(id, function(){
+        console.log('User id: '+id + " has been deleted")
+    })
+
+    res.redirect('/')
+})
+
 
 
 
