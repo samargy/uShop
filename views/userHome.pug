@@ -14,12 +14,11 @@ block content
             label(class="position-relative" style="top: -2.5rem") Search:
         div(class="card-deck position-absolute" style="left: 18rem; top: 11rem")
             each shop, i in shops
-                if (i % 4 == 0)
-                    
+                if (i % 4 == 0) && (i != 0)
+
                 else 
                     div(class="card")
-                        -console.log(shop.img)
-                        a(href="/")
+                        a(href="/"+user._id+"/shopPage/"+shop._id)
                             img(class="card-img-top" src="/photo-storage/"+shop.img alt="Card image cap")
                         div(class="card-body")
                             b=shop.name

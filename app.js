@@ -1242,6 +1242,19 @@ app.get('/:id/deleteAcc', async function(req, res){
 })
 
 
+app.get('/:userID/shopPage/:shopID', async function(req, res){
+    
+    const userID = req.params.userID
+    const shopID = req.params.shopID
+    const user = await User.findById(userID)
+    const shop = await Shop.findById(shopID)
+
+    res.render('shopPage', {
+        shop: shop,
+        user: user
+    })
+})
+
 
 
 

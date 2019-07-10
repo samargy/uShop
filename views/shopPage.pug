@@ -1,0 +1,23 @@
+extends user-layout
+
+block content
+    link(rel="stylesheet", href="/css/slider.css")
+    div(class="container mt-4 pl-1 ml-0" style="width: 13rem; height: 40rem;")
+        div(class="card ml-2 mt-2")
+            h5(class="card-title text-center mt-3 mb-3") Categories
+            ul(class="list-group list-group-flush p-0")
+                each category, i in shop.itemCategories
+                    li(class="list-group-item p-1 text-center")=category
+        div(class="card ml-2 mt-2")
+            h5(class="card-title text-center mt-3 mb-3") Manufacturers
+            ul(class="list-group list-group-flush p-0")
+                each manufacturer, i in shop.manufacturers
+                    li(class="list-group-item p-1 text-center")=manufacturer
+        div(class="card ml-2 mt-2")
+            h5(class="card-title text-center mt-3 mb-3") Price
+            input(type="range" class="form-control")
+    div(class="row position-absolute" style="top: 6rem; left: 21.5rem; width: 35rem; font-size: 175%")
+            input(type="text" class="form-control position-relative" style="left: 4.5rem")
+            label(class="position-relative" style="top: -2.5rem; left: -2rem") Search:
+            a(class="position-relative" href="/"+user._id+"/userHome" style="left: -13rem; top: -2.5rem")
+                u(style="font-size: 95%;") Back
