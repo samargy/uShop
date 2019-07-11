@@ -1271,7 +1271,8 @@ app.post('/:userID/addtoCart/:itemID/shop/:shopID', async function(req, res){
     const itemID = req.params.itemID
     const user = await User.findById(userID)
     const item = await Item.findById(itemID)
-    const itemQTY = req.body.qty
+    const itemQTY = Number(req.body.qty)
+    const shop = await Shop.findById(shopID)
 
 
     let updatedUser = {}
@@ -1281,9 +1282,16 @@ app.post('/:userID/addtoCart/:itemID/shop/:shopID', async function(req, res){
     let cartItem = {
         name: item.name,
         price: item.retail_price,
-        qty: itemQTY
+        qty: itemQTY,
+        img: item.img,
+        shopName: shop.name,
     }
-    updatedUser.cart[itemID] = cartItem;
+    if(updatedUser.cart[itemID]) {
+       updatedUser.cart[itemID].qty = updatedUser.cart[itemID].qty + cartItem.qty
+    }
+    else{
+        updatedUser.cart[itemID] = cartItem;
+    }
     console.log(updatedUser)
 
     await User.updateOne({_id: userID}, updatedUser)
@@ -1311,6 +1319,49 @@ app.get('/:userID/shopPage/:shopID/addedtoCart/:qty/:itemID', async function(req
     })
 })
 
+
+
+
+app.get('/:userid/cart/:shopid', async function(req, res){
+
+    const id  = req.params.userid
+    const oldUser = await User.findById(id)
+    let items = [];
+    const oldCart = oldUser.cart
+    for(var key in oldCart){
+        if((key != 'subtotal') && (key != 'doc')){
+            items.push(oldCart[key])
+        }
+    }
+
+    let subtotal = 0;
+    for(var i in items){
+        subtotal = subtotal + (items[i].price * items[i].qty)
+        console.log(subtotal)
+    }
+
+    let updatedUser = {};
+    updatedUser.cart = oldUser.cart;
+    updatedUser.cart.subtotal = subtotal;
+    await User.findByIdAndUpdate(id, updatedUser)
+
+    const newUser = await User.findById(id)
+    const cart = newUser.cart
+    items = [];
+    for(var key in cart){
+        if((key != 'subtotal') && (key != 'doc')){
+            items.push(cart[key])
+        }
+    }
+
+
+    res.render('userCart', {
+        user: newUser,
+        cart: cart,
+        items: items,
+        shopid: req.params.shopid
+    })
+})
 
 
 

@@ -1,0 +1,42 @@
+extends user-layout
+
+block content
+    div(class="custom-container" style="margin-left: 1rem")
+        h1(class="position-relative " style="top: 1rem") Shopping Cart
+        table(class="table table-borderless ml-3 mt-3" style="border-color: grey")
+            thead
+                tr
+                    th(scope="col")
+                    th(scope="col")
+                    th(scope="col")
+                    th(scope="col")
+                    th(scope="col")
+            tbody
+                each item, i in items
+                    tr
+                        td
+                            img(src="/photo-storage/"+item.img style="max-width: 80px; max-height: 50px")
+                        td
+                            span=item.name
+                            br
+                            i(style="font-size: 90%; color: grey")=item.shopName
+                        td
+                            a(style="font-size: 120%" class="adder font-weight-bold mr-3") -
+                            span=item.qty
+                            a(style="font-size: 120%" class="minus font-weight-bold ml-3") +
+                        td 
+                            span(class="position-relative" style="font-size: 80%; top: -5px") $
+                            span #{item.price*item.qty}.00
+                        td 
+                            a(class="position-relative" style="top: -.5rem; font-size: 200%; color: red; text-decoration: none; ") &times; 
+        div(class="mt-2 p-3 mr-3" style="border-top: 1px solid grey")
+            div(class="position-relative" style="float: left")
+                a(href="/"+user._id+'/shopPage/'+shopid) 
+                    u(style="font-size: ") Back
+            div(class="container position-relative" style="left: 40rem;")
+                div(class="lead" style="font-size: 110%; color: grey; float: left") Subtotal:
+                div(class="lead position-relative" style="font-size: 150%; top: -8px; left: 5px")
+                    span(class="position-relative" style="font-size: 80%; top: -5px") $
+                    span #{cart.subtotal}.00
+                 
+                    
