@@ -995,9 +995,10 @@ app.get('/:id/restockItems/:mode', async function(req, res){
     if(mode == 'option') {
     const items = await Item.find({shopId: id})
 
-    res.render('inventory-restockItems-manual', {
+    res.render('inventory-restockItems', {
         shop: shop,
-        items: items
+        items: items,
+        mode: 'manual'
     })
 }
 
@@ -1025,103 +1026,49 @@ app.get('/:id/restockItems/:mode', async function(req, res){
 
     const updatedItems = await Item.find({shopId: id})
 
-    res.render('inventory-restockItems-all', {
+    res.render('inventory-restockItems', {
         shop: shop,
-        items: updatedItems
+        items: updatedItems,
+        mode: 'all'
     })
     }
 });
 
-//ADDING 1 STOCK TO THE ITEM MANUALLY
-app.get('/:shopid/addStock/:itemid', async function(req, res){
 
-    const shopId = req.params.shopid
-    const itemId = req.params.itemid
+app.post("/:id/restockInvManual", async function(req, res){
 
-    const item = await Item.findById(itemId)
-    
-    //adding 1 to the stock
-    let stock = item.stock
-    let updatedItem = {}
-    updatedItem.stock = stock + 1;
-    updatedItem.stock_date = Date(Date.now());
+    console.log('called')
 
+    //Really weird formating from body-parser. Just gotta do it this way
+    const stockVals = req.body['stockVals[]'] 
 
-    const buyPrice = item.buy_price
-
-    //Updating the item in the database
-    Item.updateOne({_id: itemId}, updatedItem, async function(err) {
-        if(err) {
-            console.log(err)
-        }
-        else {
-            console.log('Stocked Item ---> id: '+itemId)
-
-            //return to inventory page
-            return res.redirect("/"+shopId+"/deductBalance/"+buyPrice)
-        }
-    })
-});
-
-//DEDUCTING 1 STOCK FROM THE ITEM MANUALLY
-app.get('/:shopid/minusStock/:itemid', async function(req, res){
-
-    const shopId = req.params.shopid
-    const itemId = req.params.itemid
-
-    const item = await Item.findById(itemId)
-    
-    //adding 1 to the stock
-    let stock = item.stock
-    let updatedItem = {}
-    updatedItem.stock = stock - 1;
-    updatedItem.stock_date = Date(Date.now());
-
-
-    const buyPrice = item.buy_price
-
-    //Updating the item in the database
-    Item.updateOne({_id: itemId}, updatedItem, async function(err) {
-        if(err) {
-            console.log(err)
-        }
-        else {
-            console.log('Stocked Item ---> id: '+itemId)
-
-            //return to inventory page
-            return res.redirect("/"+shopId+"/restockItems/option")
-        }
-    })
-});
-
-app.get("/:id/deductBalance/:ammount", async function(req, res){
-
+    //getting id from params
     const id = req.params.id
-    const ammount = req.params.ammount
 
-    let updatedShop = {}
-    let shop = await Shop.findById(id)
-    let currentBal = shop.balance
-    console.log(currentBal)
+    const items = await Item.find({shopId: id})
 
-    updatedShop.balance = 10;
-    console.log(updatedShop.balance)
+
+    //Putting all the item id's in an array so we can update their stocks
+    let itemIDs = []
+    for(i = 0; i < items.length; i++){
+        itemIDs.push(items[i]._id) 
+    }
+
+    for(i=0; i < itemIDs.length; i++){
+
+        //Creating empty updateObj to be parsed into update function
+        let updateObj = {}
+
+        //Letting the stock of the update Object = the stock value at the same position as the
+        //index - > i
+        updateObj.stock = stockVals[i]
+
+        await Item.findByIdAndUpdate(itemIDs[i], updateObj, {useFindAndModify: false})
+    }
     
-    Shop.updateOne({id: id}, updatedShop, async function(err){
-        if(err){
-            console.log(err)
-        }
-        else{
-            console.log('changed shop bal')
-        }
-    })
-
-    return res.redirect("/"+id+"/restockItems/option")
-})
-
-
-app.post("/:id/inventory", async function(req, res){
-    console.log(req.body)
+    //for some weird reason, this needs to be here, and on the client side code
+    //idk why it works but it works ok.
+    res.redirect('/'+id+'/inventory')   
 })
 
 
@@ -1362,9 +1309,12 @@ app.get('/:userid/cart/:code', async function(req, res){
     //with the newly calculated subtotal, and pass that onto the Pug file
     await User.findByIdAndUpdate(id, updatedUser)
 
-    //retrieving the cart and the 
+    //retrieving the user and the cart
     const newUser = await User.findById(id)
     const cart = newUser.cart
+
+    //doing the same as above, where we use for in loop to push only the items into an array
+    //this is so the pug file can just iterate through the array and display the items in cart
     items = [];
     for(var key in cart){
         if((key != 'subtotal') && (key != 'doc')){
@@ -1372,6 +1322,13 @@ app.get('/:userid/cart/:code', async function(req, res){
         }
     }
 
+
+    //This if statement here renders the page differently depending on where the cart page was 
+    //requested from. If the cart button is clicked from a shop page then it renders the cart page
+    //with a back button going to the shops actual page.
+    //In any other scenario the back button becomes a 'Back to Shops' button and takes the user
+    //back to the userHome route
+    // the 'code' parameter is either an id of a shop, or the keyword 'noBack'
     if(req.params.code != 'noBack') {
         res.render('userCart', {
             user: newUser,
@@ -1392,9 +1349,6 @@ app.get('/:userid/cart/:code', async function(req, res){
 })
 
 
-app.get('/:userID/checkout', async function(req, res){
-
-})
 
 
 

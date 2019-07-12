@@ -44,9 +44,19 @@ block content
         a(href="/"+shop._id+"/addItem" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px; background-color: #009FFD; color: white; border-color: black;") Create an Item
         a(href="/"+shop._id+"/inventory/removeItems" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px; background-color: #009FFD; color: white; border-color: black;") Remove Items
         a(href="/"+shop._id+"/findItems" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px; background-color: #087DB7; color: white; border-color: black;") Find Items
-        a(name='CONFIRM'+shop._id class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: red; color: white; border-color: black;") Done
-        a(href="/"+shop._id+"/restockItems/all" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: #1D3557; color: white; border-color: black;") Restock All
-        a(href="/"+shop._id+"/restockItems/auto" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: #1D3557; color: white; border-color: black;") Autostock All
+
+        if mode == 'manual'
+            a(name='CONFIRM'+shop._id class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: red; color: white; border-color: black;") Done
+            a(href="/"+shop._id+"/restockItems/all" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: #1D3557; color: white; border-color: black;") Restock All
+            a(href="/"+shop._id+"/restockItems/auto" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: #1D3557; color: white; border-color: black;") Autostock All
+        if mode == 'all'
+            a(href="/"+shop._id+"/restockItems/option" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: #1D3557; color: white; border-color: black;") Restock Items
+            a(name='CONFIRM'+shop._id class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: red; color: white; border-color: black;") Done
+            a(href="/"+shop._id+"/restockItems/auto" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: #1D3557; color: white; border-color: black;") Autostock All
+        if mode == 'auto'
+            a(href="/"+shop._id+"/restockItems/option" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: #1D3557; color: white; border-color: black;") Restock Items
+            a(href="/"+shop._id+"/restockItems/all" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: #1D3557; color: white; border-color: black;") Restock All
+            a(name='CONFIRM'+shop._id class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: red; color: white; border-color: black;") Done
 
     script(src="/js/restock.js")
 
