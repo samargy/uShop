@@ -1285,6 +1285,7 @@ app.post('/:userID/addtoCart/:itemID/shop/:shopID', async function(req, res){
         qty: itemQTY,
         img: item.img,
         shopName: shop.name,
+        shopID: shopID
     }
     if(updatedUser.cart[itemID]) {
        updatedUser.cart[itemID].qty = updatedUser.cart[itemID].qty + cartItem.qty
@@ -1322,29 +1323,46 @@ app.get('/:userID/shopPage/:shopID/addedtoCart/:qty/:itemID', async function(req
 
 
 
-app.get('/:userid/cart/:shopid', async function(req, res){
+app.get('/:userid/cart/:code', async function(req, res){
 
+    //getting the id of the user
     const id  = req.params.userid
+
+    //getting the current user object
     const oldUser = await User.findById(id)
+
+    //creating empty array to be filled
     let items = [];
+
+    //getting the cart object from the user object
     const oldCart = oldUser.cart
+
+    //pushing the items into an array, using a for each loop.
+    //this loop excudles the two keys of the object we don't want (subtotal & doc)
+    //because they are not items, they only tell us infomation about the cart.
     for(var key in oldCart){
         if((key != 'subtotal') && (key != 'doc')){
             items.push(oldCart[key])
         }
     }
 
+    //This recalculation of the subtotal makes sure that no bugs can occur.
     let subtotal = 0;
     for(var i in items){
         subtotal = subtotal + (items[i].price * items[i].qty)
-        console.log(subtotal)
     }
 
+    //creating empty object so we can update the document in our DB
     let updatedUser = {};
+    //setting the cart property of the empty object to the same cart object from our old user
     updatedUser.cart = oldUser.cart;
+    //set the subtotal value of the cart object to the subtotal we just calculated previously
     updatedUser.cart.subtotal = subtotal;
+    //update the document in the DB, so we can retrieve an updated version of the document,
+    //with the newly calculated subtotal, and pass that onto the Pug file
     await User.findByIdAndUpdate(id, updatedUser)
 
+    //retrieving the cart and the 
     const newUser = await User.findById(id)
     const cart = newUser.cart
     items = [];
@@ -1354,14 +1372,31 @@ app.get('/:userid/cart/:shopid', async function(req, res){
         }
     }
 
-
-    res.render('userCart', {
-        user: newUser,
-        cart: cart,
-        items: items,
-        shopid: req.params.shopid
-    })
+    if(req.params.code != 'noBack') {
+        res.render('userCart', {
+            user: newUser,
+            cart: cart,
+            items: items,
+            prevPage: '/'+id +'/shopPage/'+req.params.code
+        })
+    }
+    else{
+        res.render('userCart', {
+            user: newUser,
+            cart: cart,
+            items: items,
+            prevPage: '/'+id +'/userHome/',
+            noBack: true
+        })
+    } 
 })
+
+
+app.get('/:userID/checkout', async function(req, res){
+
+})
+
+
 
 
 

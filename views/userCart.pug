@@ -31,12 +31,17 @@ block content
                             a(class="position-relative" style="top: -.5rem; font-size: 200%; color: red; text-decoration: none; ") &times; 
         div(class="mt-2 p-3 mr-3" style="border-top: 1px solid grey")
             div(class="position-relative" style="float: left")
-                a(href="/"+user._id+'/shopPage/'+shopid) 
-                    u(style="font-size: ") Back
-            div(class="container position-relative" style="left: 40rem;")
+                a(href=prevPage) 
+                    if noBack == true
+                        u(style="font-size: ") Back to Shops
+                    else
+                        u(style="font-size: ") Back
+            div(class="container position-relative" style="left: 40rem; top: 1.1rem")
                 div(class="lead" style="font-size: 110%; color: grey; float: left") Subtotal:
                 div(class="lead position-relative" style="font-size: 150%; top: -8px; left: 5px")
                     span(class="position-relative" style="font-size: 80%; top: -5px") $
                     span #{cart.subtotal}.00
-                 
-                    
+            a(href="/"+user._id+"/checkout" style="position: relative; height: 50px; width: 225px; background-color: #1D3557; color: white; border-radius: 10px; font-size: 190%; top: -30px; float: right") 
+                div(class="text-center lead m-2 position-relative" style="font-size: 110%; float: left; top: -9px") Checkout
+                img(class="mr-4 mt-1" src="/images/cart-icon.png" style="width: 17%; float: right;")
+            
