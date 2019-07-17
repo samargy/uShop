@@ -21,7 +21,7 @@ block content
                     div(class="input-group" style="width: 65%")
                         div(class="input-group-prepend")
                             span(class="input-group-text" style="background-color: #FFF; border-right: none") $
-                        input(name="retail_price" type="number" class="form-control" id="inputRetail" placeholder="84.00")
+                        input(name="retail_price" type="number" class="form-control" id="inputRetail" placeholder="84.00" step="any")
                 div(class="form-group" style="margin-left: -2rem")
                     label(for="inputEcoOrder") Economic Order Quantity 
                         i (units)
@@ -35,19 +35,22 @@ block content
                         each category, c in shop.itemCategories
                             option(value=category)=category
                 a(class="position-relative" href="/"+shop._id+"/editCats" style="margin-left: -3rem; margin-right: 1.1rem; top: 40px")
-                    u Edit   
+                    if shop.itemCategories.length == 0
+                        u Add
+                    else
+                        u Edit   
                 div(class="form-group col-md-3")
                     label(for="inputBuy") Buy Price 
                         i (per item)
                     div(class="input-group" style="width: 65%")
                         div(class="input-group-prepend")
                             span(class="input-group-text" style="background-color: #FFF; border-right: none") $
-                        input(name="buy_price" type="number" class="form-control" id="inputBuy" placeholder="84.00")
+                        input(name="buy_price" type="number" class="form-control" id="inputBuy" placeholder="84.00" step="any")
                 div(class="form-group" style="margin-left: -2rem")
                     label(for="inputInitial") Initial Stock         
                         i (units)
                     div(class="input-group" style="width: 80%;")
-                        input(name="initialStock" type="number" class="form-control" id="inputInitial" placeholder="0")
+                        input(name="initialStock" type="number" class="form-control" id="inputInitial" placeholder="0" )
             div(class="form-row" id="row3")
                 div(class="form-group col-lg-4")
                     label(for="inputManufacturer") Manufacturer 
@@ -55,7 +58,10 @@ block content
                         each manufacturer, i in shop.manufacturers
                             option(value=manufacturer)=manufacturer
                 a(class="position-relative" href="/"+shop._id+"/editManus" style="margin-left: -3rem; margin-right: 1.1rem; top: 40px")
-                    u Edit  
+                    if shop.manufacturers.length == 0
+                        u Add
+                    else
+                        u Edit    
                 div(class="form-group col-lg-4")
                     label(for="inputMinStock") Minimum Stock Threshold 
                         i (units)

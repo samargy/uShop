@@ -30,7 +30,7 @@ block content
                         td=item.name
                         td=item.category
                         td=item.manufacturer
-                        td(class='stockgroup')
+                        td(class='stockgroup' style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;" unselectable="on" onselectstart="return false;" onmousedown="return false;")
                             a(style="font-size: 120%" class="adder font-weight-bold m-1") +
                             span(class="stockval")=item.stock
                             a(style="font-size: 120%" class="minus font-weight-bold m-1") -

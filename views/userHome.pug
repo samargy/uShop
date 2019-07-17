@@ -1,28 +1,39 @@
 extends user-layout
 
 block content 
-    div(class="container p-0 ml-2 mt-3")
-        div(class="col-sm-3")
+    div(class="container mt-2 ml-2")
+        div(style="width: 15rem; height: 40rem;" class='mt-4')
             div(class="card")
                 h5(class="card-title text-center mt-3 mb-3") Categories
                 ul(class="list-group list-group-flush p-0")
                     - let categoriesArray = ["Baby and Nursery", "Beauty","Books, Stationary and Gifts","Clothing and accessories","Designer and Boutqiue","Discount and variety","Electronics and technology","Entertainment","Fresh food and groceries","Health and Fitness","Home","Luggage and travel accessories","Luxury and premium","Sporting goods","Toys and Hobbies"]
                     each category, i in categoriesArray
-                        li(class="list-group-item p-1 text-center")=category
+                        li(class="list-group-item p-1 text-center")
+                            a(href="/"+user._id+"/userHome/category/"+category style="color: black")=category
         div(class="row position-absolute" style="top: 6rem; left: 20rem; width: 35rem; font-size: 175%")
             input(type="text" class="form-control position-relative" style="left: 6.5rem")
             label(class="position-relative" style="top: -2.5rem") Search:
-        div(class="card-deck position-absolute" style="left: 18rem; top: 11rem")
-            each shop, i in shops
-                if (i % 4 == 0) && (i != 0)
-                //- ?????????????????
-                else 
-                    div(class="card")
-                        a(href="/"+user._id+"/shopPage/"+shop._id)
-                            img(class="card-img-top" src="/photo-storage/"+shop.img alt="Card image cap")
-                        div(class="card-body")
-                            b=shop.name
-                            p Category: #{shop.categories}
+        div(class="position-absolute" style="left: 18rem; top: 11rem")
+            each row, i in shopGroups
+                div(class="card-deck" mb-3)
+                    each shop, i in row
+                        div(class="card" style="max-width: 13rem")
+                            a(href="/"+user._id+"/shopPage/"+shop._id)
+                                img(class="card-img-top" src="/photo-storage/"+shop.img alt="Card image cap" )
+                            div(class="card-body")
+                                b=shop.name
+                                p Category: #{shop.categories}
+
+
+            //- if (i % 4 == 0) && (i != 0)
+            //- //- ?????????????????
+            //- else 
+            //-     div(class="card" style="max-width: 200px")
+            //-         a(href="/"+user._id+"/shopPage/"+shop._id)
+            //-             img(class="card-img-top" src="/photo-storage/"+shop.img alt="Card image cap" )
+            //-         div(class="card-body")
+            //-             b=shop.name
+            //-             p Category: #{shop.categories}
 
                 
                 

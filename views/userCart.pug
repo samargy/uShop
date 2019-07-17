@@ -15,20 +15,24 @@ block content
                 each item, i in items
                     tr
                         td
-                            img(src="/photo-storage/"+item.img style="max-width: 80px; max-height: 50px")
+                            img(src="/photo-storage/"+item.img style="max-width: 80px; max-height: 70px")
                         td
                             span=item.name
                             br
                             i(style="font-size: 90%; color: grey")=item.shopName
-                        td
-                            a(style="font-size: 120%" class="adder font-weight-bold mr-3") -
+                        td(class="qtyGroup" style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;" unselectable="on" onselectstart="return false;" onmousedown="return false;")
+                            a(style="font-size: 120%" class="minus font-weight-bold mr-3") -
                             span=item.qty
-                            a(style="font-size: 120%" class="minus font-weight-bold ml-3") +
+                            a(style="font-size: 120%" class="adder font-weight-bold ml-3") +
                         td 
                             span(class="position-relative" style="font-size: 80%; top: -5px") $
-                            span #{item.price*item.qty}.00
+                            -var splitString = String(item.price).split('')
+                            if splitString[splitString.length-3] == '.'
+                                span(class="priceVal") #{item.price*item.qty}
+                            else
+                                span(class="priceVal") #{item.price*item.qty}.00
                         td 
-                            a(class="position-relative" style="top: -.5rem; font-size: 200%; color: red; text-decoration: none; ") &times; 
+                            a(href="/"+user._id+"/removeItem/"+i class="position-relative" style="top: -.5rem; font-size: 200%; color: red; text-decoration: none; ") &times; 
         div(class="mt-2 p-3 mr-3" style="border-top: 1px solid grey")
             div(class="position-relative" style="float: left")
                 a(href=prevPage) 
@@ -40,8 +44,10 @@ block content
                 div(class="lead" style="font-size: 110%; color: grey; float: left") Subtotal:
                 div(class="lead position-relative" style="font-size: 150%; top: -8px; left: 5px")
                     span(class="position-relative" style="font-size: 80%; top: -5px") $
-                    span #{cart.subtotal}.00
+                    span(id="subtotal") #{cart.subtotal}
             a(href="/"+user._id+"/checkout" style="position: relative; height: 50px; width: 225px; background-color: #1D3557; color: white; border-radius: 10px; font-size: 190%; top: -30px; float: right") 
                 div(class="text-center lead m-2 position-relative" style="font-size: 110%; float: left; top: -9px") Checkout
                 img(class="mr-4 mt-1" src="/images/cart-icon.png" style="width: 17%; float: right;")
+        
+    script(src="/js/cart.js")
             
