@@ -1421,6 +1421,31 @@ app.get('/:userid/cart/:code', async function(req, res){
     } 
 })
 
+app.get('/:id/removeItem/:itemIndex', async function(req, res){
+
+    const id = req.params.id
+    const user = await User.findById(id)
+    const cart = user.cart
+
+    let updatedUser = {}
+    updatedUser.cart = user.cart;
+    
+    let itemsIDs = []
+    for(var key in cart){
+        if((key != 'subtotal') && (key != 'doc')){
+            itemsIDs.push(key)
+        }
+    }
+
+    const itemID = itemsIDs[req.params.itemIndex]
+    
+    delete updatedUser.cart[itemID]
+      
+    await User.findByIdAndUpdate(id, updatedUser)
+
+    return res.redirect('back')
+})
+
 
 
 //THIS IS A STRING MANIPULATION FUNCTION TO GET THE FILE EXTENSION

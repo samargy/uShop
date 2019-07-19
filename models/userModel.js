@@ -11,7 +11,8 @@ var userSchema = new Schema ({
     mobileNumber: String,
     email: String,
     password: String,
-    cart: Object
+    cart: Object,
+    bookmarks: Array
 });
 
 

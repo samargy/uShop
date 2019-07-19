@@ -15,9 +15,15 @@ $(".qtyGroup")
 
                 //if the number isn't a decimal add .00 on the end of it
                 let splitString = String(newTotal).split('')
-                if(splitString[splitString.length-3] != '.'){
-                    newTotal = String(newTotal) + '.00'
-                }
+                let hasDot = false
+                    for(i=0; i < splitString.length; i++){
+                        if(splitString[i] == '.'){
+                            hasDot = true;
+                        }
+                    }
+                    if(hasDot == false){
+                        newTotal = String(newTotal) + '.00'
+                    }
 
                 //Then setting this
                 $(this).parent().next().children().next().html(String(newTotal))
@@ -42,8 +48,14 @@ $(".qtyGroup")
                     let newTotal = Math.floor(((itemPrice * (Number(qty)-1))*100))/100
 
                     let splitString = String(newTotal).split('')
-                    if(splitString[splitString.length-3] != '.'){
-                    newTotal = String(newTotal) + '.00'
+                    let hasDot = false
+                    for(i=0; i < splitString.length; i++){
+                        if(splitString[i] == '.'){
+                            hasDot = true;
+                        }
+                    }
+                    if(hasDot == false){
+                        newTotal = String(newTotal) + '.00'
                     }
 
                     $(this).parent().next().children().next().html(String(newTotal))

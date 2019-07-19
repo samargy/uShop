@@ -24,11 +24,13 @@ block content
                             a(style="font-size: 120%" class="minus font-weight-bold mr-3") -
                             span=item.qty
                             a(style="font-size: 120%" class="adder font-weight-bold ml-3") +
-                        td 
+                        td(style="min-width: 150px") 
                             span(class="position-relative" style="font-size: 80%; top: -5px") $
                             -var splitString = String(item.price).split('')
                             if splitString[splitString.length-3] == '.'
                                 span(class="priceVal") #{item.price*item.qty}
+                            else if  splitString[splitString.length-2] == '.'
+                                span(class="priceVal") #{item.price*item.qty}0
                             else
                                 span(class="priceVal") #{item.price*item.qty}.00
                         td 

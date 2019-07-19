@@ -8,11 +8,12 @@ html
         script(src='https://code.jquery.com/jquery-3.4.1.js', integrity='sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=', crossorigin='anonymous')
         script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js', integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1', crossorigin='anonymous')
         script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js', integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM', crossorigin='anonymous')
+        script(src="/js/bookmark.js")
         link(rel="stylesheet", href="https://use.fontawesome.com/releases/v5.8.1/css/all.css")
     body
         nav(class="navbar navbar-expand-md navbar-dark bg-dark sticky-top") 
             a(class="navbar-text" style="font-size:175%; color:white; padding:0px" href="/"+user._id+"/userHome") uShop.com
-            a(class="img container" href="/"+user._id+"/bookmarks")
+            a(id="bookmarkBTN" class="img container" href="#")
                 img(src="/images/bookmark-icon.png" class="position-absolute" style="width: 1.8%; right: 17.5rem;")  
             a(class="img container" href="/"+user._id+"/cart/"+shop._id)
                 img(src="/images/cart-icon.png" class="position-absolute" style="width: 3.3%; right: 13.5rem")
@@ -21,6 +22,12 @@ html
             span(class="navbar-text position-absolute" style="right:50px; padding:0px")
                 a(style="font-size:120%; color:white" href="/logout") 
                     u Log Out
+        div(id="bookmarkDropdown" class="z-1 bg-dark text-white position-absolute p-2 text-center mt-1" style="display: none; right: 13.5rem; width: 150px; border-radius: 10px")
+            a(class="text" href="/"+user._id+"/bookmarks/addShop/"+shop._id style="text-decoration: none; color: white") 
+                span Add this Page
+                b(style="font-size: 110%")   + 
+            div(class="dropdown-divider")
+            a(class="text" href="/"+user._id+"/bookmarks" style="text-decoration: none; color: white") Go to Bookmarks
         //- Making the success modal render only if an item has been added to cart
         if addedtoCart == true
             div(class="modal fade success" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalTitle" aria-hidden="true")
@@ -63,7 +70,7 @@ html
 
                         else 
                             div(class="card" style="max-width: 200px")
-                                img(class="card-img-top p-1" src="/photo-storage/"+item.img alt="Card image cap" style="max-width: 200  px")
+                                img(data-toggle="tooltip" data-placement="right" title=item.desc class="card-img-top p-1" src="/photo-storage/"+item.img alt="Card image cap" style="max-width: 200  px")
                                 div(class="card-body pb-0")
                                     b=item.name
                                     p Price:
@@ -74,3 +81,4 @@ html
                                         
                                     
                                     
+    script(src="/js/tooltip.js")
