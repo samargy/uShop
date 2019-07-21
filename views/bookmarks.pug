@@ -1,0 +1,18 @@
+extends user-layout
+
+block content 
+    div(class="custom-container" style="margin-left: 1rem")
+        h1(class="position-relative " style="top: 1rem") Your Bookmarks
+        div(class="ml-5 mt-5")
+            each row, i in shops
+                div(class="card-deck mb-3")
+                    each shop, i in row
+                        div(class="card" style="max-width: 15rem")                                
+                                a(href="/"+user._id+"/shopPage/"+shop._id)
+                                    img(class="card-img-top" src="/photo-storage/"+shop.img alt="Card image cap" )
+                                div(class="card-body")
+                                    b=shop.name
+                                    p Category: #{shop.categories}
+                                    br
+                                    a(href="/"+user._id+"/deleteBookmark/"+i style="color: red") Remove
+                                        b(style="color:red")  &times;
