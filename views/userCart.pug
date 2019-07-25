@@ -26,13 +26,8 @@ block content
                             a(style="font-size: 120%" class="adder font-weight-bold ml-3") +
                         td(style="min-width: 150px") 
                             span(class="position-relative" style="font-size: 80%; top: -5px") $
-                            -var splitString = String(item.price).split('')
-                            if splitString[splitString.length-3] == '.'
-                                span(class="priceVal") #{item.price*item.qty}
-                            else if  splitString[splitString.length-2] == '.'
-                                span(class="priceVal") #{item.price*item.qty}0
-                            else
-                                span(class="priceVal") #{item.price*item.qty}.00
+                            span(class="priceVal") #{(item.price*item.qty).toFixed(2)}
+                                
                         td 
                             a(href="/"+user._id+"/removeItem/"+i class="position-relative" style="top: -.5rem; font-size: 200%; color: red; text-decoration: none; ") &times; 
         div(class="mt-2 p-3 mr-3" style="border-top: 1px solid grey")

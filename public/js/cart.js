@@ -88,7 +88,6 @@ function updateSubtotal() {
 $("a[name*='SUBMIT']").css('cursor', 'pointer').click(function(){
 
     let id = $(this).attr('name').split("S")[0] 
-    console.log('clocling')
     let data = {}
     data.qtys = []
     $(".qtyVAL").each(function(){

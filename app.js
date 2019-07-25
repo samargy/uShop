@@ -1075,7 +1075,8 @@ app.get('/:id/restockItems/:mode', async function(req, res){
 app.post("/:id/restockInvManual", async function(req, res){
 
     //Really weird formating from body-parser. Just gotta do it this way
-    const stockVals = req.body['stockVals[]'] 
+    let stockVals = [];
+    stockVals.push(req.body['stockVals[]'])
 
     //getting id from params
     const id = req.params.id
@@ -1088,6 +1089,7 @@ app.post("/:id/restockInvManual", async function(req, res){
     for(i = 0; i < items.length; i++){
         itemIDs.push(items[i]._id) 
     }
+    console.log(stockVals)
 
     for(i=0; i < itemIDs.length; i++){
 
@@ -1096,7 +1098,7 @@ app.post("/:id/restockInvManual", async function(req, res){
 
         //Letting the stock of the update Object = the stock value at the same position as the
         //index - > i
-        updateObj.stock = stockVals[i]
+        updateObj.stock = stockVals[0][i]
 
         await Item.findByIdAndUpdate(itemIDs[i], updateObj, {useFindAndModify: false})
     }
@@ -1402,6 +1404,7 @@ app.get('/:userid/cart/:code', async function(req, res){
     let subtotal = 0;
     for(var i in items){
         subtotal = subtotal + (items[i].price * items[i].qty)
+        subtotal = Number(subtotal).toFixedDown(2) //making it to 2dp
     }
 
     //creating empty object so we can update the document in our DB
@@ -1584,10 +1587,8 @@ app.post('/:id/checkout', async function(req, res){
 app.get('/:id/sales', async function(req, res){
 
     const id = req.params.id
-    const shop = Shop.findById(id)
-
-
-
+    const shop = await Shop.findById(id)
+    console.log(shop._id)
 
     res.render('sales', {
         shop: shop
@@ -1638,6 +1639,16 @@ function groupItems(items){
     }
     return itemsGroupedArray;
 }
+
+
+/*
+Bit of code of stack overflow for getting my numbers to 2dp without rounding errors
+*/
+Number.prototype.toFixedDown = function(digits) {
+    var re = new RegExp("(\\d+\\.\\d{" + digits + "})(\\d)"),
+        m = this.toString().match(re);
+    return m ? parseFloat(m[1]) : this.valueOf();
+};
 
 
 

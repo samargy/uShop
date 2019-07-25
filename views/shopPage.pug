@@ -60,9 +60,6 @@ html
                     each manufacturer, i in shop.manufacturers
                         li(class="list-group-item p-1 text-center")
                             a(href="/"+user._id+"/shopPage/"+shop._id+"/manu/"+manufacturer style="color: black")=manufacturer
-            div(class="card ml-2 mt-3")
-                h5(class="card-title text-center mt-3 mb-3") Price
-                input(type="range" class="form-control")
         div(class="row position-absolute" style="top: 6rem; left: 15rem; width: 35rem; font-size: 175%")
                 input(type="text" class="form-control position-relative" style="left: 6.5rem")
                 label(class="position-relative" style="top: -2.5rem") Search:
