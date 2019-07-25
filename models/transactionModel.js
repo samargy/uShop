@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 var transactionSchema = new Schema ({
     userID: String,
-    shopID: String,
+    shopIDs: Array,
     doc: Date,
     cart: Object,
 });

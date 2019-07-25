@@ -1,0 +1,49 @@
+extends shop-layout
+
+block content 
+    div(class="custom-container" style="margin-left: 1rem; width: 1000px")
+        div(class="row")
+            h1(class="position-relative " style="top: 1rem; left: 3rem") Sales Dashboard
+            h1(class="position-relative" style="top: 1rem; right: -32rem") Top Sellers
+            div(class="wrapper position-relative" style="top: 1.2rem; right: -35rem")
+                div(class="custom-select position-relative" style="top: -10px")
+                    select(style="-webkit-appearance: none; -moz-appearance: none; text-indent: 1px; text-overflow: '';")
+                        option This Week
+                        option This Month
+                        option This Year
+                        option All Time 
+                    div(class="position-relative" style="top: 8px; width: 50px; height: 10px; background-color: white; padding: none; left: 80px")    
+        table(class=" position-relative" style="border-collapse: seperate; left:2.5rem;top:1rem; width: 38rem; height: 38rem" )
+            thead
+                tr
+                    th(scope="col") 
+                    th(scope="col") 
+            tbody
+                tr
+                    td
+                        div(class="wrapper text-center" style="font-size: 250%; border-right: 4px solid black; border-bottom: 4px solid black;") 
+                            div(class="lead position-relative" style="font-size: 85%; top: 5px") Products Sold
+                            br
+                            div(class="lead position-relative" style="font-size: 85%; top: -20px") 1072
+                    td(class="position-relative" style="left: -2px")
+                        div(class="wrapper  text-center" style="font-size: 250%; border-bottom: 4px solid black;") 
+                            div(class="lead position-relative" style="font-size: 85%; top: 5px") Total Revenue
+                            br
+                            div(class="lead position-relative" style="font-size: 85%; top: -20px") 1072
+                tr
+                    td(class="position-relative" style="top: -139px")
+                        div(class="wrapper  text-center" style="font-size: 250%; border-right: 4px solid black") 
+                            div(class="lead position-relative" style="font-size: 85%; top: 5px") Orders Made
+                            br
+                            div(class="lead position-relative" style="font-size: 85%; top: -20px") 1072
+                    td(class="position-relative" style="top: -139px")
+                        div(class="wrapper text-center" style="font-size: 250%") 
+                            div(class="lead position-relative" style="font-size: 85%; top: 5px") Total Profit
+                            br
+                            div(class="lead position-relative" style="font-size: 85%; top: -20px") 1072
+        div(class="custom-container positon-relative")
+            div() box 1
+            div() box 2
+            div() box 3
+        script(src="/js/customDropdown.js")
+                    

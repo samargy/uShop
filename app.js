@@ -1412,7 +1412,7 @@ app.get('/:userid/cart/:code', async function(req, res){
     updatedUser.cart.subtotal = subtotal;
     //update the document in the DB, so we can retrieve an updated version of the document,
     //with the newly calculated subtotal, and pass that onto the Pug file
-    await User.findByIdAndUpdate(id, updatedUser)
+    await User.findByIdAndUpdate(id, updatedUser, {useFindAndModify: false})
 
     //retrieving the user and the cart
     const newUser = await User.findById(id)
@@ -1473,7 +1473,7 @@ app.get('/:id/removeItem/:itemIndex', async function(req, res){
     
     delete updatedUser.cart[itemID]
       
-    await User.findByIdAndUpdate(id, updatedUser)
+    await User.findByIdAndUpdate(id, updatedUser, {useFindAndModify: false})
 
     return res.redirect('back')
 })
@@ -1531,10 +1531,71 @@ app.get('/:id/deleteBookmark/:index', async function(req, res){
     updatedUser.bookmarks = user.bookmarks
     updatedUser.bookmarks.splice(req.params.index, 1) //Removes bookmark from the array
 
-    await User.findByIdAndUpdate(id, updatedUser)
+    await User.findByIdAndUpdate(id, updatedUser, {useFindAndModify: false})
 
     return res.redirect('back')
 })
+
+const Transaction = require('./models/transactionModel')
+app.post('/:id/checkout', async function(req, res){
+    const id = req.params.id
+
+    const qtys = req.body['qtys[]']
+
+    const user = await User.findById(id)
+    let cart = user.cart
+    let shopIDs = []
+    let i = 0;
+    for(var key in cart){
+        if((key != 'subtotal') && (key != 'doc')){
+            cart[key].qty = Number(qtys[i])
+            shopIDs.push(cart[key].shopID)
+            i++;
+        }
+    }
+
+    let transaction = new Transaction()
+    transaction.userID = id;
+    transaction.cart = cart
+    transaction.shopIDs = shopIDs;
+    transaction.doc = Date(Date.now());
+
+
+
+    let updatedUser = {}
+    updatedUser.cart = {
+        subtotal: 0
+    }
+
+    await User.findByIdAndUpdate(id, updatedUser, {useFindAndModify: false})
+
+    transaction.save(function(err, transaction){
+        if(err){
+            console.log(err)
+        }
+        else{
+            console.log("---------- TRANSACTION MADE ---------")
+            console.log(transaction)
+            return res.redirect("/"+id+"/userHome")
+        }
+    })
+});
+
+app.get('/:id/sales', async function(req, res){
+
+    const id = req.params.id
+    const shop = Shop.findById(id)
+
+
+
+
+    res.render('sales', {
+        shop: shop
+    })
+
+})
+
+
 
 //THIS IS A STRING MANIPULATION FUNCTION TO GET THE FILE EXTENSION
 /**

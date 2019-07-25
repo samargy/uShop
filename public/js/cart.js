@@ -82,3 +82,21 @@ function updateSubtotal() {
     }
     $("#subtotal").html(subtotal)
 }
+
+
+
+$("a[name*='SUBMIT']").css('cursor', 'pointer').click(function(){
+
+    let id = $(this).attr('name').split("S")[0] 
+    console.log('clocling')
+    let data = {}
+    data.qtys = []
+    $(".qtyVAL").each(function(){
+        data.qtys.push($(this).html())
+    })
+
+    $.post('/'+id+'/checkout', data, function(){
+        window.location = '/'+id+'/userHome'
+    })
+
+})
