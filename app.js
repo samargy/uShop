@@ -349,7 +349,7 @@ app.post('/:id/shopEditAcc', async function(req, res) {
             updatedShop.name = data.name
             updatedShop.categories = []
             
-
+            
             //Adding the categories on 
             switch(Number(data.categoryCount)){
                 case 1:
@@ -383,6 +383,7 @@ app.post('/:id/shopEditAcc', async function(req, res) {
             //Making the query for the update function
             const updateQuery = {_id: shopId}
 
+            console.log(data.categoryCount)
             Shop.updateOne(updateQuery, updatedShop, async function(err) {
                 if(err) {
                     console.log(err)
@@ -1359,8 +1360,10 @@ app.post('/:userID/addtoCart/:itemID/shop/:shopID', async function(req, res){
         qty: itemQTY,
         img: item.img,
         shopName: shop.name,
-        shopID: shopID
+        shopID: shopID,
+        _id: item._id
     }
+
     if(updatedUser.cart[itemID]) {
        updatedUser.cart[itemID].qty = updatedUser.cart[itemID].qty + cartItem.qty
     }
@@ -1588,10 +1591,134 @@ app.get('/:id/sales', async function(req, res){
 
     const id = req.params.id
     const shop = await Shop.findById(id)
-    console.log(shop._id)
+    const transactions = await Transaction.find()
+    
+    
+    let itemsSold = []
+    let revenue = 0;
+    let ordersMade = 0;
+    let totalBuyPrice = 0;
+
+
+    //Linear Search through all transactions - this is my linear search function.
+    //Has a few nested linear searches if that gets me bonus points. 
+    for(i=0; i < transactions.length; i++){
+
+        //Looping through the 3 element array of shopIDs
+        for(j=0; j < transactions[i].shopIDs.length; j++){
+            /*
+            //if the transaction object .shopIDs property (which is an array)
+            contains the id of the shop, then do the following
+            */
+            if(transactions[i].shopIDs[j] === id){ 
+
+                //loops through the .cart object of the transaction
+                for(var key in transactions[i].cart){ 
+
+                    //if the item has a matching shop id
+                    if(transactions[i].cart[key].shopID === id){ 
+
+                        //adding that item sold to the array
+                        itemsSold.push(transactions[i].cart[key]) 
+
+                        //Adding the price of the item to revenue
+                        revenue = revenue + (transactions[i].cart[key].price*transactions[i].cart[key].qty)
+                        
+                        //Accessing the db so we can get the buy price of the item
+                        const item = await Item.findById(key)
+
+                        //Adding the buy price to the total buy price
+                        totalBuyPrice = totalBuyPrice + (item.buy_price*transactions[i].cart[key].qty)
+                    }
+                }
+                //Incrementing the orders made
+                ordersMade++;
+
+                /*breaking out of the loop to avoid running the process mutiple times, if the
+                shopIDs array contained the same ID twice, which would cause the loop to run twice.
+                */
+                break;
+            }
+        }
+    }
+
+
+    console.log(itemsSold)
+
+    // //Gets the most common item in the array using code from stack overflow.
+    // //The .slice() part is so a duplicate is made, because the mode() function edits the array
+    // let firstBestSeller = mode(itemsSold.slice())._id
+    
+    // //Removing all occurences of the best seller from the array
+    // for(i=0; i < itemsSold.length; i++){
+    //     if(itemsSold[i]._id === firstBestSeller){
+    //         itemsSold.splice(i, 1)
+    //     }
+    // }
+
+    // //Now gets the most common item in the array without the best seller in it
+    // let secondBestSeller = mode(itemsSold.slice())._id
+
+    // //Removing all occurences of the second best seller from the array
+    // for(i=0; i < itemsSold.length; i++){
+    //     if(itemsSold[i]._id === secondBestSeller){
+    //         itemsSold.splice(i, 1)
+    //     }
+    // }
+
+    // let thirdBestSeller = mode(itemsSold.slice())._id
+
+    // console.log(itemsSold)
+    // console.log("1st: " + firstBestSeller)
+    // console.log("2nd: " + secondBestSeller)
+    // console.log("3rd: " + thirdBestSeller)
+
+    // firstBestSeller = await Item.findById(firstBestSeller)
+    // secondBestSeller = await Item.findById(secondBestSeller)
+    // thirdBestSeller = await Item.findById(thirdBestSeller)
+
+
+    //This loop, looks through all the items in the shop inventory,
+    //looking at the item sold array and seeing how many times each item appears
+    //in the item sold array. It then produces an array called rankings
+    //which is an array of 2 element arrays looking like this
+    //
+    // [[itemId, timesItAppeared], [itemId, timesItAppeared].......]
+    
+    const items = await Item.find({shopId: id})
+    let rankings = []
+    for(i=0; i < items.length; i++){
+
+        let appearCount = 0
+        for(x = 0; x < itemsSold.length; x++){
+
+            //If the item we are looking for appears in the items sold array
+            //then add one to how many times we see it appear.
+            //Doing the let id1 and id2 makes sure both of them are both a String
+            let id1 = ""+ itemsSold[x]._id
+            let id2 = ""+ items[i]._id
+            if(id1 == id2){
+                appearCount++;
+            }
+        }
+        //Creates an array that looks like this ['items id', appearCount]
+        let rankItem = [items[i]._id, appearCount, items[i].name]
+        rankings.push(rankItem)
+    }
+
+
+    console.log(rankings)
+
 
     res.render('sales', {
-        shop: shop
+        shop: shop, 
+        ordersMade: ordersMade,
+        revenue: revenue.toFixed(2),
+        profit: (revenue-totalBuyPrice.toFixed(2)),
+        productsSold: itemsSold.length,
+        // firstBestSeller: firstBestSeller,
+        // secondBestSeller: secondBestSeller,
+        // thirdBestSeller: thirdBestSeller
     })
 
 })
@@ -1649,6 +1776,20 @@ Number.prototype.toFixedDown = function(digits) {
         m = this.toString().match(re);
     return m ? parseFloat(m[1]) : this.valueOf();
 };
+
+/*
+Once again, another bit of code from stackoverflow, this is an elegant solution, to find
+the mode (most common element) of an array. I use this to find the top sellers on the sales page.
+
+Basically what it does is, filter the array so the most common element is at the end of the array
+Then just pops it off so you get the most common element. 
+*/
+function mode(arr){
+    return arr.sort((a,b) =>
+          arr.filter(v => v===a).length
+        - arr.filter(v => v===b).length
+    ).pop();
+}
 
 
 
