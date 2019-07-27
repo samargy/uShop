@@ -41,7 +41,7 @@ block content
                 div(class="lead" style="font-size: 110%; color: grey; float: left") Subtotal:
                 div(class="lead position-relative" style="font-size: 150%; top: -8px; left: 5px")
                     span(class="position-relative" style="font-size: 80%; top: -5px") $
-                    span(id="subtotal") #{cart.subtotal}
+                    span(id="subtotal") #{cart.subtotal.toFixed(2)}
             a(name=user._id+"SUBMIT" style="position: relative; height: 50px; width: 225px; background-color: #1D3557; color: white; border-radius: 10px; font-size: 190%; top: -30px; float: right") 
                 div(class="text-center lead m-2 position-relative" style="font-size: 110%; float: left; top: -9px") Checkout
                 img(class="mr-4 mt-1" src="/images/cart-icon.png" style="width: 17%; float: right;")

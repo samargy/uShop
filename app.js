@@ -1642,49 +1642,6 @@ app.get('/:id/sales', async function(req, res){
         }
     }
 
-
-    console.log(itemsSold)
-
-    // //Gets the most common item in the array using code from stack overflow.
-    // //The .slice() part is so a duplicate is made, because the mode() function edits the array
-    // let firstBestSeller = mode(itemsSold.slice())._id
-    
-    // //Removing all occurences of the best seller from the array
-    // for(i=0; i < itemsSold.length; i++){
-    //     if(itemsSold[i]._id === firstBestSeller){
-    //         itemsSold.splice(i, 1)
-    //     }
-    // }
-
-    // //Now gets the most common item in the array without the best seller in it
-    // let secondBestSeller = mode(itemsSold.slice())._id
-
-    // //Removing all occurences of the second best seller from the array
-    // for(i=0; i < itemsSold.length; i++){
-    //     if(itemsSold[i]._id === secondBestSeller){
-    //         itemsSold.splice(i, 1)
-    //     }
-    // }
-
-    // let thirdBestSeller = mode(itemsSold.slice())._id
-
-    // console.log(itemsSold)
-    // console.log("1st: " + firstBestSeller)
-    // console.log("2nd: " + secondBestSeller)
-    // console.log("3rd: " + thirdBestSeller)
-
-    // firstBestSeller = await Item.findById(firstBestSeller)
-    // secondBestSeller = await Item.findById(secondBestSeller)
-    // thirdBestSeller = await Item.findById(thirdBestSeller)
-
-
-    //This loop, looks through all the items in the shop inventory,
-    //looking at the item sold array and seeing how many times each item appears
-    //in the item sold array. It then produces an array called rankings
-    //which is an array of 2 element arrays looking like this
-    //
-    // [[itemId, timesItAppeared], [itemId, timesItAppeared].......]
-    
     const items = await Item.find({shopId: id})
     let rankings = []
     for(i=0; i < items.length; i++){
@@ -1703,26 +1660,115 @@ app.get('/:id/sales', async function(req, res){
         }
         //Creates an array that looks like this ['items id', appearCount]
         let rankItem = [items[i]._id, appearCount, items[i].name]
+        //pushes rank item onto the rankings array
         rankings.push(rankItem)
     }
 
+     //SELECTION SORT FOR THE RANKINGS ARRAY, SO THE TOP ITEMS ARE AT THE START OF THE ARRAY
+     
+     //Making length a variable for easy access
+     let n = rankings.length
 
-    console.log(rankings)
+     //Moving the boundary of the unsorted array
+     for(i=0; i < n; i++){
 
 
-    res.render('sales', {
-        shop: shop, 
-        ordersMade: ordersMade,
-        revenue: revenue.toFixed(2),
-        profit: (revenue-totalBuyPrice.toFixed(2)),
-        productsSold: itemsSold.length,
-        // firstBestSeller: firstBestSeller,
-        // secondBestSeller: secondBestSeller,
-        // thirdBestSeller: thirdBestSeller
-    })
+        //Setting the current index of the max value to i.
+        let maxIndex = i;
+
+        //Find the greatest element in the unsorted array
+        for(j = i+1; j < n; j++){
+
+            //If the current element is greater than the max element then set the current element
+            //as the new max
+            if(rankings[j][1] > rankings[maxIndex][1]){
+                maxIndex = j;
+            }
+        }
+
+        //Swap current index with greatest element
+        let temp = rankings[i]
+        rankings[i] = rankings[maxIndex]
+        rankings[maxIndex] = temp
+
+     }
+
+    /*
+     THIS SWITCH STATEMENT IS SO IF THE SHOP HASN'T SOLD MORE THAN 2 DIFFERENT ITEMS,
+     THEN THE PAGE OBVIOUSLY CANT RENDER 3 TOP ITEMS, so it has to render it accordingly.
+     In all cases, you make an item object for each of the top 3 items, which gets 
+     sent to the PUG file along with all the other data the pug file needs. 
+    */
+    // switch(rankings.length) {
+    //     case 1:
+    //         let firstBestSeller = await Item.findById(rankings[0][0])
+    //         res.render('sales', {
+    //             shop: shop, 
+    //             ordersMade: ordersMade,
+    //             revenue: revenue.toFixed(2),
+    //             profit: ((revenue-totalBuyPrice).toFixed(2)),
+    //             productsSold: itemsSold.length,
+    //             firstBestSeller: firstBestSeller,
+    //             firstBestSellerCount: rankings[0][1],
+    //             NumTopItems: 1
+    //         })
+    //         break;
+    //     case 2: 
+    //         let firstBestSeller = await Item.findById(rankings[0][0])
+    //         let secondBestSeller = await Item.findById(rankings[1][0])
+    //         res.render('sales', {
+    //             shop: shop, 
+    //             ordersMade: ordersMade,
+    //             revenue: revenue.toFixed(2),
+    //             profit: ((revenue-totalBuyPrice).toFixed(2)),
+    //             productsSold: itemsSold.length,
+    //             firstBestSeller: firstBestSeller,
+    //             firstBestSellerCount: rankings[0][1],
+    //             secondBestSeller: secondBestSeller,
+    //             secondBestSellerCount: rankings[1][1],
+    //             NumTopItems: 2
+    //         })
+    //         break;
+    //     default:
+    //         let firstBestSeller = await Item.findById(rankings[0][0])
+    //         let secondBestSeller = await Item.findById(rankings[1][0])
+    //         let thirdBestSeller = await Item.findById(rankings[2][0])
+    //         res.render('sales', {
+    //             shop: shop, 
+    //             ordersMade: ordersMade,
+    //             revenue: revenue.toFixed(2),
+    //             profit: ((revenue-totalBuyPrice).toFixed(2)),
+    //             productsSold: itemsSold.length,
+    //             firstBestSeller: firstBestSeller,
+    //             firstBestSellerCount: rankings[0][1],
+    //             secondBestSeller: secondBestSeller,
+    //             secondBestSellerCount: rankings[1][1],
+    //             thirdBestSeller: thirdBestSeller,
+    //             thirdBestSellerCount: rankings[2][1],
+    //             NumTopItems: '3 or more'
+    //         })
+    // }
+
+            let firstBestSeller = await Item.findById(rankings[0][0])
+            let secondBestSeller = await Item.findById(rankings[1][0])
+            let thirdBestSeller = await Item.findById(rankings[2][0])
+            res.render('sales', {
+                shop: shop, 
+                ordersMade: ordersMade,
+                revenue: revenue.toFixed(2),
+                profit: ((revenue-totalBuyPrice).toFixed(2)),
+                productsSold: itemsSold.length,
+                firstBestSeller: firstBestSeller,
+                firstBestSellerCount: rankings[0][1],
+                secondBestSeller: secondBestSeller,
+                secondBestSellerCount: rankings[1][1],
+                thirdBestSeller: thirdBestSeller,
+                thirdBestSellerCount: rankings[2][1],
+                NumTopItems: '3 or more'
+            })
+    
 
 })
-
 
 
 //THIS IS A STRING MANIPULATION FUNCTION TO GET THE FILE EXTENSION
@@ -1790,6 +1836,8 @@ function mode(arr){
         - arr.filter(v => v===b).length
     ).pop();
 }
+
+
 
 
 
