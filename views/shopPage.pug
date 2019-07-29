@@ -60,10 +60,7 @@ html
                     each manufacturer, i in shop.manufacturers
                         li(class="list-group-item p-1 text-center")
                             a(href="/"+user._id+"/shopPage/"+shop._id+"/manu/"+manufacturer style="color: black")=manufacturer
-        div(class="row position-absolute" style="top: 6rem; left: 15rem; width: 35rem; font-size: 175%")
-                input(type="text" class="form-control position-relative" style="left: 6.5rem")
-                label(class="position-relative" style="top: -2.5rem") Search:
-        div(class="position-absolute" style="left: 15rem; top: 11rem")        
+        div(class="position-absolute" style="left: 15rem; top: 5rem")        
             each row, i in items
                 div(class="card-deck mb-3")
                     each item, i in row

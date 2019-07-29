@@ -41,28 +41,50 @@ block content
                             div(class="lead position-relative" style="font-size: 85%; top: 5px") Total Profit
                             br
                             div(class="lead position-relative" style="font-size: 85%; top: -20px") $#{Number(profit).toFixed(2)}
-        div(class="custom-container position-relative" style="float: right; top: -34rem; left: 220px")
-            div(class="position-relative" style="width: 300px; height: 220px; left: 60px") 
-                span(class="position-relative" style="height: 50px; width: 50px; border: 2px solid black; border-radius: 100%; padding: 9px 15px; left: -30px; top: -80px") 1
-                img(class="position-relative" src="/photo-storage/"+firstBestSeller.img style="width: 180px; height: 180px; top: 10px")
-                div(class="mt-3" style="display: flex; justify-content: space-between")
-                    div(class="lead" style="float: left; font-size: 110%") + $#{(firstBestSeller.retail_price*firstBestSellerCount).toFixed(2)}
-                    div(class="lead" style="float: right; color: grey; font-size: 100%") Sold #{firstBestSellerCount} @ $#{(firstBestSeller.retail_price).toFixed(2)} each
-
-            if NumTopItems === 2 || NumTopItems === '3 or more'
+        if NumTopItems === 1
+            div(class="custom-container position-relative" style="float: right; top: -34rem; left: 100px")
+                div(class="position-relative" style="width: 300px; height: 220px; left: 60px") 
+                    span(class="position-relative" style="height: 50px; width: 50px; border: 2px solid black; border-radius: 100%; padding: 9px 15px; left: -30px; top: -80px") 1
+                    img(class="position-relative" src="/photo-storage/"+firstBestSeller.img style="width: 180px; height: 180px; top: 10px")
+                    div(class="mt-3" style="display: flex; justify-content: space-between")
+                        div(class="lead" style="float: left; font-size: 110%") + $#{(firstBestSeller.retail_price*firstBestSellerCount).toFixed(2)}
+                        div(class="lead" style="float: right; color: grey; font-size: 100%") Sold #{firstBestSellerCount} @ $#{(firstBestSeller.retail_price).toFixed(2)} each
+        if NumTopItems == 2
+            div(class="custom-container position-relative" style="float: right; top: -34rem; left: 90px")
+                div(class="position-relative" style="width: 300px; height: 220px; left: 60px") 
+                    span(class="position-relative" style="height: 50px; width: 50px; border: 2px solid black; border-radius: 100%; padding: 9px 15px; left: -30px; top: -80px") 1
+                    img(class="position-relative" src="/photo-storage/"+firstBestSeller.img style="width: 180px; height: 180px; top: 10px")
+                    div(class="mt-3" style="display: flex; justify-content: space-between")
+                        div(class="lead" style="float: left; font-size: 110%") + $#{(firstBestSeller.retail_price*firstBestSellerCount).toFixed(2)}
+                        div(class="lead" style="float: right; color: grey; font-size: 100%") Sold #{firstBestSellerCount} @ $#{(firstBestSeller.retail_price).toFixed(2)} each
+                    div(class="position-relative mt-5" style="display: flex; justify-content: center")
+                        div(class="mr-2" style="width: 220px; height: 190px;")
+                            span(class="position-relative" style="height: 20px; width: 20px; border: 2px solid black; border-radius: 100%; padding: 6px 11px; top: -40px") 2
+                            img(src="/photo-storage/"+secondBestSeller.img style="width: 120px; height: 120px")
+                            div(class="mt-3" style="display: flex; justify-content: space-between")
+                                div(class="lead" style="float: left; font-size: 80%") + $#{(secondBestSeller.retail_price*secondBestSellerCount).toFixed(2)}
+                                div(class="lead" style="float: right; color: grey; font-size: 70%") Sold #{secondBestSellerCount} @ $#{(secondBestSeller.retail_price).toFixed(2)} each
+        if NumTopItems === '3 or more'
+            div(class="custom-container position-relative" style="float: right; top: -34rem; left: 240px")
+                div(class="position-relative" style="width: 300px; height: 220px; left: 60px") 
+                    span(class="position-relative" style="height: 50px; width: 50px; border: 2px solid black; border-radius: 100%; padding: 9px 15px; left: -30px; top: -80px") 1
+                    img(class="position-relative" src="/photo-storage/"+firstBestSeller.img style="width: 180px; height: 180px; top: 10px")
+                    div(class="mt-3" style="display: flex; justify-content: space-between")
+                        div(class="lead" style="float: left; font-size: 110%") + $#{(firstBestSeller.retail_price*firstBestSellerCount).toFixed(2)}
+                        div(class="lead" style="float: right; color: grey; font-size: 100%") Sold #{firstBestSellerCount} @ $#{(firstBestSeller.retail_price).toFixed(2)} each
                 div(class="position-relative mt-5" style="display: flex; justify-content: center")
-                    div(class="mr-2" style="width: 220px; height: 190px;")
+                    div(class="mr-3" style="width: 220px; height: 190px;")
                         span(class="position-relative" style="height: 20px; width: 20px; border: 2px solid black; border-radius: 100%; padding: 6px 11px; top: -40px") 2
                         img(src="/photo-storage/"+secondBestSeller.img style="width: 120px; height: 120px")
                         div(class="mt-3" style="display: flex; justify-content: space-between")
                             div(class="lead" style="float: left; font-size: 80%") + $#{(secondBestSeller.retail_price*secondBestSellerCount).toFixed(2)}
                             div(class="lead" style="float: right; color: grey; font-size: 70%") Sold #{secondBestSellerCount} @ $#{(secondBestSeller.retail_price).toFixed(2)} each
-            if NumTopItems === '3 or more'
-                div(style="width: 220px; height: 190px;")
-                    span(class="position-relative" style="height: 20px; width: 20px; border: 2px solid black; border-radius: 100%; padding: 6px 11px; top: -40px") 3
-                    img(src="/photo-storage/"+secondBestSeller.img style="width: 120px; height: 120px")
-                    div(class="mt-3" style="display: flex; justify-content: space-between")
-                        div(class="lead" style="float: left; font-size: 80%") + $#{(secondBestSeller.retail_price*secondBestSellerCount).toFixed(2)}
-                        div(class="lead" style="float: right; color: grey; font-size: 70%") Sold #{secondBestSellerCount} @ $#{(secondBestSeller.retail_price).toFixed(2)} each
+                    div(style="width: 220px; height: 190px;")
+                        span(class="position-relative" style="height: 20px; width: 20px; border: 2px solid black; border-radius: 100%; padding: 6px 11px; top: -40px; right: 10px") 3
+                        img(src="/photo-storage/"+thirdBestSeller.img style="width: 120px; height: 120px")
+                        div(class="mt-3" style="display: flex; justify-content: space-between")
+                            div(class="lead" style="float: left; font-size: 80%") + $#{(thirdBestSeller.retail_price*thirdBestSellerCount).toFixed(2)}
+                            div(class="lead" style="float: right; color: grey; font-size: 70%") Sold #{thirdBestSellerCount} @ $#{(thirdBestSeller.retail_price).toFixed(2)} each
+        div(id="shopID" hidden)=shop._id
         script(src="/js/customDropdown.js")
                     

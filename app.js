@@ -1117,7 +1117,22 @@ app.get('/:id/userhome', async function(req, res){
 
     const id = req.params.id
     const user = await User.findById(id)
-    const shops = await Shop.find()
+    
+
+    let searchParams;
+    for(var search in req.query){
+        searchParams = search
+    }
+
+    //If there is parameters
+    let shops;
+    if(searchParams) {
+        shops = await Shop.find({name: {$regex: ".*"+searchParams+"*." , $options: 'i'}})
+    }
+    else {
+        shops = await Shop.find()
+    }
+
 
     let shopsGroupedArray = []
     let shoprow = []
@@ -1191,18 +1206,18 @@ app.post('/:id/editUserAcc', async function(req, res){
     if(data.email !== data.reEmail) {
         if(data.password !== data.rePassword) {
             //Tell user they need to have matching email and password
-            return res.redirect('userHome/noMatch/email+password')
+            return res.redirect('userProfile/noMatch/email+password')
         }
     //Tell user they need to have matching email
-    return res.redirect('userHome/noMatch/email')
+    return res.redirect('userProfile/noMatch/email')
     }
     else if(data.password !== data.rePassword) {
         //Tell the user they need to have matching password
-        return res.redirect('userHome/noMatch/password')
+        return res.redirect('userProfile/noMatch/password')
     }
     else if (userEmailResult) {
         //Tell the user a shop with that email already exists
-        return res.redirect('userHome/alreadyExist/email')
+        return res.redirect('userProfile/alreadyExist/email')
     }
 
     //If all validation succeeds - THEN
@@ -1231,7 +1246,7 @@ app.post('/:id/editUserAcc', async function(req, res){
 })
 
 
-app.get('/:id/userHome/:err/:code', async function(req, res){
+app.get('/:id/userProfile/:err/:code', async function(req, res){
 
     const id = req.params.id
 
@@ -1283,7 +1298,6 @@ app.get('/:userID/shopPage/:shopID', async function(req, res){
     
     const itemsGroupedArray = groupItems(items) //formats an array so pug can process it
     
-    console.log(itemsGroupedArray)
     res.render('shopPage', {
         shop: shop,
         user: user,
@@ -1407,7 +1421,7 @@ app.get('/:userid/cart/:code', async function(req, res){
     let subtotal = 0;
     for(var i in items){
         subtotal = subtotal + (items[i].price * items[i].qty)
-        subtotal = Number(subtotal).toFixedDown(2) //making it to 2dp
+        subtotal = Number(subtotal).toFixed(2) //making it to 2dp
     }
 
     //creating empty object so we can update the document in our DB
@@ -1547,14 +1561,24 @@ app.post('/:id/checkout', async function(req, res){
     const id = req.params.id
 
     const qtys = req.body['qtys[]']
-
+    console.log(Number(qtys))
     const user = await User.findById(id)
     let cart = user.cart
     let shopIDs = []
     let i = 0;
     for(var key in cart){
         if((key != 'subtotal') && (key != 'doc')){
-            cart[key].qty = Number(qtys[i])
+
+            //This if statement here prevents the code from stripping a number
+            //from the end of the number when there is only 1 item in the cart
+            if(typeof qtys == 'string'){
+                console.log('yo u good?')
+                cart[key].qty = Number(qtys)
+            }
+            else{
+                cart[key].qty = Number(qtys[i])
+
+            }
             shopIDs.push(cart[key].shopID)
             i++;
         }
@@ -1591,14 +1615,46 @@ app.get('/:id/sales', async function(req, res){
 
     const id = req.params.id
     const shop = await Shop.findById(id)
-    const transactions = await Transaction.find()
     
     
+    let timeFrame;
+    let transactions;
+
+    //This is to extract the phrase 'All Time' or 'This Week' from the query object
+    //As the phrase is stored as a key name.
+    //Even though it is a loop, it only loops once.
+    for(var key in req.query){
+        timeFrame = key;
+    }
+    switch(timeFrame) {
+        case 'This Week': {
+            let aWeekAgo = moment(Date.now()).subtract(7, 'd')
+            transactions  = await Transaction.find({doc: {$gte: aWeekAgo}})
+        }
+        break;
+        case 'This Month': {
+            let aMonthAgo = moment(Date.now()).subtract(1, 'M')
+            transactions  = await Transaction.find({doc: {$gte: aMonthAgo}})
+        }
+        break;
+        case 'This Year': {
+            let aYearAgo = moment(Date.now()).subtract(1, 'y')
+            transactions  = await Transaction.find({doc: {$gte: aYearAgo}})
+        }
+        break;
+
+        //This case runs if no query's are present - equivilant of All time 
+        default: {
+        transactions = await Transaction.find()
+        }
+        break;
+    }
+
     let itemsSold = []
     let revenue = 0;
     let ordersMade = 0;
     let totalBuyPrice = 0;
-
+    
 
     //Linear Search through all transactions - this is my linear search function.
     //Has a few nested linear searches if that gets me bonus points. 
@@ -1655,7 +1711,7 @@ app.get('/:id/sales', async function(req, res){
             let id1 = ""+ itemsSold[x]._id
             let id2 = ""+ items[i]._id
             if(id1 == id2){
-                appearCount++;
+                appearCount = appearCount + itemsSold[x].qty;
             }
         }
         //Creates an array that looks like this ['items id', appearCount]
@@ -1693,62 +1749,53 @@ app.get('/:id/sales', async function(req, res){
 
      }
 
+
+    let productsSold = 0;
+    for(i=0; i < rankings.length; i++){
+        //Adding the ammount of items to products sold
+        productsSold = productsSold + rankings[i][1]
+    }
     /*
      THIS SWITCH STATEMENT IS SO IF THE SHOP HASN'T SOLD MORE THAN 2 DIFFERENT ITEMS,
      THEN THE PAGE OBVIOUSLY CANT RENDER 3 TOP ITEMS, so it has to render it accordingly.
      In all cases, you make an item object for each of the top 3 items, which gets 
      sent to the PUG file along with all the other data the pug file needs. 
     */
-    // switch(rankings.length) {
-    //     case 1:
-    //         let firstBestSeller = await Item.findById(rankings[0][0])
-    //         res.render('sales', {
-    //             shop: shop, 
-    //             ordersMade: ordersMade,
-    //             revenue: revenue.toFixed(2),
-    //             profit: ((revenue-totalBuyPrice).toFixed(2)),
-    //             productsSold: itemsSold.length,
-    //             firstBestSeller: firstBestSeller,
-    //             firstBestSellerCount: rankings[0][1],
-    //             NumTopItems: 1
-    //         })
-    //         break;
-    //     case 2: 
-    //         let firstBestSeller = await Item.findById(rankings[0][0])
-    //         let secondBestSeller = await Item.findById(rankings[1][0])
-    //         res.render('sales', {
-    //             shop: shop, 
-    //             ordersMade: ordersMade,
-    //             revenue: revenue.toFixed(2),
-    //             profit: ((revenue-totalBuyPrice).toFixed(2)),
-    //             productsSold: itemsSold.length,
-    //             firstBestSeller: firstBestSeller,
-    //             firstBestSellerCount: rankings[0][1],
-    //             secondBestSeller: secondBestSeller,
-    //             secondBestSellerCount: rankings[1][1],
-    //             NumTopItems: 2
-    //         })
-    //         break;
-    //     default:
-    //         let firstBestSeller = await Item.findById(rankings[0][0])
-    //         let secondBestSeller = await Item.findById(rankings[1][0])
-    //         let thirdBestSeller = await Item.findById(rankings[2][0])
-    //         res.render('sales', {
-    //             shop: shop, 
-    //             ordersMade: ordersMade,
-    //             revenue: revenue.toFixed(2),
-    //             profit: ((revenue-totalBuyPrice).toFixed(2)),
-    //             productsSold: itemsSold.length,
-    //             firstBestSeller: firstBestSeller,
-    //             firstBestSellerCount: rankings[0][1],
-    //             secondBestSeller: secondBestSeller,
-    //             secondBestSellerCount: rankings[1][1],
-    //             thirdBestSeller: thirdBestSeller,
-    //             thirdBestSellerCount: rankings[2][1],
-    //             NumTopItems: '3 or more'
-    //         })
-    // }
-
+    switch(rankings.length) {
+        case 1:
+            {
+            let firstBestSeller = await Item.findById(rankings[0][0])
+            res.render('sales', {
+                shop: shop, 
+                ordersMade: ordersMade,
+                revenue: revenue.toFixed(2),
+                profit: ((revenue-totalBuyPrice).toFixed(2)),
+                productsSold: productsSold,
+                firstBestSeller: firstBestSeller,
+                firstBestSellerCount: rankings[0][1],
+                NumTopItems: 1
+            })
+        }
+            break;
+        case 2: 
+            { let firstBestSeller = await Item.findById(rankings[0][0])
+            let secondBestSeller = await Item.findById(rankings[1][0])
+            res.render('sales', {
+                shop: shop, 
+                ordersMade: ordersMade,
+                revenue: revenue.toFixed(2),
+                profit: ((revenue-totalBuyPrice).toFixed(2)),
+                productsSold: productsSold,
+                firstBestSeller: firstBestSeller,
+                firstBestSellerCount: rankings[0][1],
+                secondBestSeller: secondBestSeller,
+                secondBestSellerCount: rankings[1][1],
+                NumTopItems: 2
+            })
+            }
+            break;
+        default:
+            {
             let firstBestSeller = await Item.findById(rankings[0][0])
             let secondBestSeller = await Item.findById(rankings[1][0])
             let thirdBestSeller = await Item.findById(rankings[2][0])
@@ -1757,7 +1804,7 @@ app.get('/:id/sales', async function(req, res){
                 ordersMade: ordersMade,
                 revenue: revenue.toFixed(2),
                 profit: ((revenue-totalBuyPrice).toFixed(2)),
-                productsSold: itemsSold.length,
+                productsSold: productsSold,
                 firstBestSeller: firstBestSeller,
                 firstBestSellerCount: rankings[0][1],
                 secondBestSeller: secondBestSeller,
@@ -1766,7 +1813,10 @@ app.get('/:id/sales', async function(req, res){
                 thirdBestSellerCount: rankings[2][1],
                 NumTopItems: '3 or more'
             })
-    
+        }
+        break;
+    }
+
 
 })
 
@@ -1813,29 +1863,6 @@ function groupItems(items){
     return itemsGroupedArray;
 }
 
-
-/*
-Bit of code of stack overflow for getting my numbers to 2dp without rounding errors
-*/
-Number.prototype.toFixedDown = function(digits) {
-    var re = new RegExp("(\\d+\\.\\d{" + digits + "})(\\d)"),
-        m = this.toString().match(re);
-    return m ? parseFloat(m[1]) : this.valueOf();
-};
-
-/*
-Once again, another bit of code from stackoverflow, this is an elegant solution, to find
-the mode (most common element) of an array. I use this to find the top sellers on the sales page.
-
-Basically what it does is, filter the array so the most common element is at the end of the array
-Then just pops it off so you get the most common element. 
-*/
-function mode(arr){
-    return arr.sort((a,b) =>
-          arr.filter(v => v===a).length
-        - arr.filter(v => v===b).length
-    ).pop();
-}
 
 
 

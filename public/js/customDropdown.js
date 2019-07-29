@@ -13,6 +13,7 @@ for (i = 0; i < x.length; i++) {
   a = document.createElement("DIV");
   a.setAttribute("class", "select-selected");
   a.innerHTML = selElmnt.options[selElmnt.selectedIndex].innerHTML;
+
   x[i].appendChild(a);
   /*for each element, create a new DIV that will contain the option list:*/
   b = document.createElement("DIV");
@@ -23,6 +24,8 @@ for (i = 0; i < x.length; i++) {
     c = document.createElement("DIV");
     c.innerHTML = selElmnt.options[j].innerHTML;
     c.addEventListener("click", function(e) {
+        
+        changeDateFilter(this.innerHTML)
         /*when an item is clicked, update the original select box,
         and the selected item:*/
         var y, i, k, s, h;
@@ -76,3 +79,24 @@ function closeAllSelect(elmnt) {
 /*if the user clicks anywhere outside the select box,
 then close all select boxes:*/
 document.addEventListener("click", closeAllSelect);
+
+
+
+
+
+
+
+//My own code that posts to the server when the time changes
+function changeDateFilter(string) {
+
+  let shopID  = document.getElementById('shopID').innerHTML
+  console.log(shopID)
+  let requestType = string
+
+  
+  $.get("/" + shopID + "/sales?"+ requestType , function(){
+    window.location = '/'+shopID+'/sales?' + requestType
+  })
+
+
+}

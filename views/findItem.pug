@@ -15,7 +15,7 @@ block content
             div(class="form-row" id="row1")
                 div(class="form-group col-lg-4")
                     label(for="inputName") Item Name 
-                    input(name="name" style="width: 85%" type="text" class="form-control" id="inputName" placeholder="Leave blank if don't want to be required")
+                    input(name="name" style="width: 85%" type="text" class="form-control" id="inputName" placeholder="Every field is required")
                 div(class="form-group col-lg-4")
                     label Retail Price Range
                     div(class="input-group" style="width: 65%")
@@ -38,7 +38,6 @@ block content
                 div(class="form-group col-lg-4")
                     label(for="inputCategory") Category 
                     select(name="category" style="width: 85%" class="form-control" id="inputCategory")
-                        option(value="") Any
                         //- Iterating through the item categories list and setting them as options
                         each category, c in shop.itemCategories
                             option(value=category)=category
@@ -64,7 +63,6 @@ block content
                 div(class="form-group col-lg-4")
                     label(for="inputManufacturer") Manufacturer 
                     select(name="manufacturer" style="width: 85%" class="form-control" id="inputManufacturer")
-                        option(value="") Any
                         //- Iterating through the item categories list and setting them as options
                         each manufacturer, c in shop.manufacturers
                             option(value=manufacturer)=manufacturer

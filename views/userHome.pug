@@ -11,7 +11,7 @@ block content
                         li(class="list-group-item p-1 text-center")
                             a(href="/"+user._id+"/userHome/category/"+category style="color: black")=category
         div(class="row position-absolute" style="top: 6rem; left: 20rem; width: 35rem; font-size: 175%")
-            input(type="text" class="form-control position-relative" style="left: 6.5rem")
+            input(id="searchBar" type="text" class="form-control position-relative" style="left: 6.5rem")
             label(class="position-relative" style="top: -2.5rem") Search:
         div(class="position-absolute" style="left: 18rem; top: 11rem")
             each row, i in shopGroups
@@ -23,5 +23,7 @@ block content
                             div(class="card-body")
                                 b=shop.name
                                 p Category: #{shop.categories}
+    div(id="userID" hidden)=user._id
+    script(src="/js/searchBar.js")
 
                 
