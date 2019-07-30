@@ -71,7 +71,7 @@ html
                                 p Price:
                                     b $#{item.retail_price}
                                 form(class="ml-0 position-relative" action="/"+user._id+"/addtoCart/"+item._id+"/shop/"+shop._id, method="post" style="left: -10px")
-                                    input(class="form-control position-relative" type="number", name="qty" style="width: 38%; left: 7.3rem; top: 2.4rem" value=1 max=99)
+                                    input(class="form-control position-relative" type="number", name="qty" style="width: 38%; left: 7.3rem; top: 2.4rem" value=1 min=1 max=99)
                                     button(type="submit" class="btn btn-primary mb-2") Add to Cart
                                         
                                     

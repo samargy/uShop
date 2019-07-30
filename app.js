@@ -1127,7 +1127,7 @@ app.get('/:id/userhome', async function(req, res){
     //If there is parameters
     let shops;
     if(searchParams) {
-        shops = await Shop.find({name: {$regex: ".*"+searchParams+"*." , $options: 'i'}})
+        shops = await Shop.find({name: {$regex: "\w*"+searchParams , $options: 'i'}})
     }
     else {
         shops = await Shop.find()
@@ -1561,7 +1561,6 @@ app.post('/:id/checkout', async function(req, res){
     const id = req.params.id
 
     const qtys = req.body['qtys[]']
-    console.log(Number(qtys))
     const user = await User.findById(id)
     let cart = user.cart
     let shopIDs = []
@@ -1572,7 +1571,6 @@ app.post('/:id/checkout', async function(req, res){
             //This if statement here prevents the code from stripping a number
             //from the end of the number when there is only 1 item in the cart
             if(typeof qtys == 'string'){
-                console.log('yo u good?')
                 cart[key].qty = Number(qtys)
             }
             else{
@@ -1590,12 +1588,25 @@ app.post('/:id/checkout', async function(req, res){
     transaction.shopIDs = shopIDs;
     transaction.doc = Date(Date.now());
 
-
-
     let updatedUser = {}
     updatedUser.cart = {
         subtotal: 0
     }
+
+    //Deducting the stock from the cart
+    for(var key in transaction.cart){
+        if(key != 'subtotal'){
+            let qty = transaction.cart[key].qty
+            let item = await Item.findById(key)
+            let updatedItem = {
+                stock: Number(item.stock) - Number(qty)
+            }
+
+            Item.findByIdAndUpdate(key, updatedItem)
+            
+        }
+    }
+
 
     await User.findByIdAndUpdate(id, updatedUser, {useFindAndModify: false})
 
