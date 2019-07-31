@@ -106,9 +106,11 @@ app.post('/userCreateAcc', async function(req,res) {
     //Tell user they need to have matching email
     return res.redirect('userCreateAcc/noMatch/email')
     }
+    //Tell the user they need to have matching password
     else if(data.password !== data.rePassword) {
         return res.redirect('userCreateAcc/noMatch/password')
     }
+    //Tell the user the account already exits
     else if(userResult){
         return res.redirect('userCreateAcc/alreadyExist')
     }
@@ -117,6 +119,8 @@ app.post('/userCreateAcc', async function(req,res) {
     else {
     //Creating the User
     let user = new User();
+
+    //Assigning each field from the form to the property in the newly created user object
     user.givenName = data.givenName;
     user.lastName = data.lastName;
     user.address = data.address;
@@ -126,6 +130,8 @@ app.post('/userCreateAcc', async function(req,res) {
     user.mobileNumber = data.mobileNumber;
     user.email = data.email;
     user.password = data.password;
+
+    //Both cart and bookmarks do not come from the form, but are created here now
     user.cart = {
         subtotal: 0
     }
@@ -142,8 +148,6 @@ app.post('/userCreateAcc', async function(req,res) {
         }
         
     })
-
-
     }
 });
 
@@ -181,6 +185,8 @@ app.post('/shopCreateAcc', async function(req,res) {
         //Tell the user a shop with that email already exists
         return res.redirect('shopCreateAcc/alreadyExist/email')
     }
+
+    //If all data validation succeeds then 
     else {
 
     //Creating the User
@@ -227,6 +233,7 @@ app.post('/shopCreateAcc', async function(req,res) {
             console.log(err)
             return;
         } else {
+            //If there isn't an error, log a shop has been created and then direct to sign in
             console.log("Shop created ---> "+shop.name)
             res.redirect('/signin')
         }
@@ -249,8 +256,10 @@ app.get('/signin/err', function(req, res) {
     })
 });
 
+//Sign in route
 app.post('/signin', async function(req, res) {
 
+    //Assigning a variable to data so I dont have to type req.body each time
     const data = req.body
 
     //Searches the shop db and the user db for a matching email + password
@@ -337,6 +346,7 @@ app.post('/:id/shopEditAcc', async function(req, res) {
         }
         //end of data validation
 
+        //IF ALL DATA VALIDATION SUCCEEDS 
         else {
 
             
@@ -436,8 +446,7 @@ app.get('/:id/shopHome/updated', async function(req, res) {
     //Searching for the shop and setting it as a variable 
     const shop = await Shop.findById(id)
 
-    //Setting err to the err sent through the URL
-
+    //Setting updated to true, so PUG displays a updated modal
     res.render('shopHome', {
         shop: shop,
         categoryCount: shop.categories.length,
@@ -446,12 +455,12 @@ app.get('/:id/shopHome/updated', async function(req, res) {
 
 })
 
-
+//When the logout button is pressed, redirect to signin 
 app.get('/logout', function(req, res) {
     res.redirect('/signin')
 })
 
-
+//Inventory route
 app.get('/:id/inventory', async function(req, res) {
 
         //Setting the shop id as a variable
@@ -471,14 +480,15 @@ app.get('/:id/inventory', async function(req, res) {
 });
 
 
-
+//Add Item route
 app.get('/:id/addItem', async function(req, res) {
 
      //Setting the shop id as a variable
      const id = req.params.id
 
-     //Searching for the shop and setting it as a variable 
+     //Searching for the shop and setting it as a variable
      const shop = await Shop.findById(id)
+
     res.render('addItem', {
         shop: shop
     })
@@ -489,9 +499,11 @@ app.get('/:id/addItem', async function(req, res) {
 const Item = require('./models/itemModel')
 app.post('/:id/addItem', async function(req, res) {
 
+    //Assigning id and data to variables for easy use
     const id = req.params.id
     const data = req.body
 
+    //Making a new 'Item' object, this is generated from mongoose schema 
     let item = new Item();
     
     //Setting the shop id to the id sent through params
@@ -510,20 +522,26 @@ app.post('/:id/addItem', async function(req, res) {
     //Setting the intial stock date to today
     item.stock_date = Date(Date.now());
 
+    //Assigning to whatever came through in the form
     item.minStock = data.minStock;
     item.eor = data.eor;
-
     item.desc = data.desc;
 
     
     //First checking a file was submitted
     if(!((req.files) == null)){
+
         //Saving the image
         let itemImg = req.files.imageFile
-        //getting the extension of it
+
+        //getting the extension of it - THIS IS A STRING MANIPULATION FUNCTION. LOCATED
+        // AT THE BOTTOM OF THIS FILE.
+        //Note: "itemImg.mimetype" is something like 'image/jpeg' , so the string manipulation
+        // splits the two 
         const ext = getFileExt(itemImg.mimetype);
 
         //Moving the file to the photostorage folder
+        //The .mv function is part of the file-upload dependecy and takes in, location
         //It is named as the items id and ending with itemImg + ext
         itemImg.mv(path.join(__dirname,'public/photo-storage/'+ item._id + 'itemImg' + '.' + ext), function(err){
             if(err) {
@@ -582,13 +600,18 @@ app.post('/:id/editCats', async function(req, res) {
         //getting the shop
         const shop = await Shop.findById(id)
 
-        updatedShop = {}
+        //Creating empty object to put into the mongoose updateOne function
+        let updatedShop = {}
 
+        //Setting the .itemCategories field to the shop.itemCategories, so we do not
+        //overwrite what the shop already has as categories
         updatedShop.itemCategories = shop.itemCategories
 
         //pushing the new category onto the array
         updatedShop.itemCategories.push(req.body.category)
 
+        // .updateOne takes in a query "{_id: id}", and the object to update, then also has a 
+        // callback function, on completion/error
         Shop.updateOne(updateQuery, updatedShop, async function(err) {
             if(err) {
                 console.log(err)
@@ -612,11 +635,13 @@ app.get('/:id/editCats/deletecategory/:index', async function(req, res) {
 
     const updateQuery = {_id: id}
 
+    //Same process as above route
     updatedShop = {}
 
     updatedShop.itemCategories = shop.itemCategories
     
-    //Removing the manufacturer out of the array
+    //Removing the manufacturer out of the array using splice, catIndex comes through
+    //client side js
     updatedShop.itemCategories.splice(catIndex,1)
 
     Shop.updateOne(updateQuery, updatedShop, async function(err) {
