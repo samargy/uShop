@@ -32,7 +32,7 @@ db.on('error', function(err) {
 
 
 //Starting App (on localhost:3000)
-app.listen(port, function() {
+app.listen(process.env.PORT || 3000, function() {
     console.log('Server started on port ' + port);
 });
 
