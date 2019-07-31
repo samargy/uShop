@@ -5,7 +5,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const fileUpload = require('express-fileupload');
-const port = 3000;
+const port = 3000 || process.env.PORT;
 const moment = require('moment')
 
 //file Upload middleware
@@ -18,8 +18,8 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
-//connect to db
-mongoose.connect('mongodb://localhost:27017/uShop',{useNewUrlParser: true})
+//connect to db (the or is if it is on my pc or if it is on heroku)
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/uShop',{useNewUrlParser: true})
 let db = mongoose.connection;
 //check db connection 
 db.once('open', function() {
