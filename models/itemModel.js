@@ -12,7 +12,7 @@ var itemSchema = new Schema ({
     stock: Number,
     stock_date: Date,
     minStock: Number,
-    eor: Number,
+    eoq: Number,
     desc: String
 });
 

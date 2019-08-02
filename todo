@@ -3,21 +3,5 @@
 TODO LIST / left undone
 
 
-FIND MENU
-1. add a little pop up to the fields in find item, that tells user to leave the fields
-blank if they don't want to search using that parameter 
-
-2. Make find items work when fields aren't entered. 
-
-
-RESTOCK 
-
-1. Get the restock costing box displaying.
-
-
-
-GET BOOKMARKS WORKING
-GET CHECKOUT AND SALES PAGE WORKING
-FINISH SHOP PAGE, do what you did for shops PAGE
-THEN GET SEARCH WORKING IF U CAN
-
+1. Binary Search
+2. Sales page, if the shop hasn't sold any items
