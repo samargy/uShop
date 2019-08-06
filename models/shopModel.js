@@ -9,7 +9,6 @@ var shopSchema = new Schema ({
     img: String,
     itemCategories: Array,
     manufacturers: Array,
-    status: String,
     balance: Number
 });
 

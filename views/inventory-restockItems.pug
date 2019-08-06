@@ -20,7 +20,7 @@ block content
 
                     //Formating the date field
                     - let d = item.stock_date.getDate()
-                    - let m = item.stock_date.getMonth()
+                    - let m = item.stock_date.getMonth() + 1
                     - let y = item.stock_date.getFullYear()
                     - let date = d + '/' + m + '/' + y
 
@@ -47,17 +47,16 @@ block content
 
         if mode == 'manual'
             a(name='CONFIRM'+shop._id class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: red; color: white; border-color: black;") Done
-            a(href="/"+shop._id+"/restockItems/all" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: #1D3557; color: white; border-color: black;") Restock All
-            a(href="/"+shop._id+"/restockItems/auto" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: #1D3557; color: white; border-color: black;") Autostock All
+            a(data-toggle="tooltip" data-placement="left" title="This stock option, automatically restocks all items, by their specified EOQ (Economic Order Quantity)" href="/"+shop._id+"/restockItems/all" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: #1D3557; color: white; border-color: black;") Restock All
+            a(data-toggle="tooltip" data-placement="left" title="This stock option, automatically restocks all items below their minimum stock threshold, by their specified EOQ (Economic Order Quantity)" href="/"+shop._id+"/restockItems/auto" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: #1D3557; color: white; border-color: black;") Autostock All
         if mode == 'all'
-            a(href="/"+shop._id+"/restockItems/option" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: #1D3557; color: white; border-color: black;") Restock Items
+            a(data-toggle="tooltip" data-placement="left" title="This stock option, allows you to manually restock each item" href="/"+shop._id+"/restockItems/option" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: #1D3557; color: white; border-color: black;") Restock Items
             a(name='CONFIRM'+shop._id class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: red; color: white; border-color: black;") Done
-            a(href="/"+shop._id+"/restockItems/auto" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: #1D3557; color: white; border-color: black;") Autostock All
+            a(data-toggle="tooltip" data-placement="left" title="This stock option, automatically restocks all items below their minimum stock threshold, by their specified EOQ (Economic Order Quantity)" href="/"+shop._id+"/restockItems/auto" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: #1D3557; color: white; border-color: black;") Autostock All
         if mode == 'auto'
-            a(href="/"+shop._id+"/restockItems/option" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: #1D3557; color: white; border-color: black;") Restock Items
-            a(href="/"+shop._id+"/restockItems/all" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: #1D3557; color: white; border-color: black;") Restock All
+            a(data-toggle="tooltip" data-placement="left" title="This stock option, allows you to manually restock each item" href="/"+shop._id+"/restockItems/option" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: #1D3557; color: white; border-color: black;") Restock Items
+            a(data-toggle="tooltip" data-placement="left" title="This stock option, automatically restocks all items, by their specified EOQ (Economic Order Quantity)" href="/"+shop._id+"/restockItems/all" class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: #1D3557; color: white; border-color: black;") Restock All
             a(name='CONFIRM'+shop._id class="btn btn-primary ml-"+marginLeft+" mb-"+marginBottom style="width: 150px; border-radius: 15px;background-color: red; color: white; border-color: black;") Done
 
     script(src="/js/restock.js")
-
-    
+    script(src="/js/tooltip.js")

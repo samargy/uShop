@@ -14,7 +14,7 @@ block content
             div(class="form-row" id="row1")
                 div(class="form-group col-lg-4")
                     label(for="inputName") Item Name 
-                    input(name="name" style="width: 85%" type="text" class="form-control" id="inputName" placeholder="e.g. 'NVIDA GTX 1080'")
+                    input(data-toggle="tooltip" data-placement="right" title="Make sure you have added some categories and manufacturers first before you create your item" name="name" style="width: 85%" type="text" class="form-control" id="inputName" placeholder="e.g. 'NVIDA GTX 1080'")
                 div(class="form-group col-md-3")
                     label(for="inputRetail") Retail Price 
                         i (per item)
@@ -26,7 +26,7 @@ block content
                     label(for="inputEcoOrder") Economic Order Quantity 
                         i (units)
                     div(class="input-group" style="width: 65%; ")
-                        input(name="eoq" type="number" class="form-control" id="inputEcoOrder" placeholder="0")
+                        input(data-toggle="tooltip" data-placement="right" title="EOQ is how many items (in units) will be ordered when your item is autostocked or when you restock all" name="eoq" type="number" class="form-control" id="inputEcoOrder" placeholder="0")
             div(class="form-row" id="row2")
                 div(class="form-group col-lg-4")
                     label(for="inputCategory") Category 
@@ -82,7 +82,7 @@ block content
                     label(for="imageFile") Upload Item Image
                     br
                     input(id="imageFile" name="imageFile" class="custom-file-input" type="file" accept="image/*")
-                    label(id="imageLabelText" class="custom-file-label position-relative" style="top:-1.8rem; width: 300px" for="imageFile") Choose your logo
+                    label(id="imageLabelText" class="custom-file-label position-relative" style="top:-1.8rem; width: 300px;  overflow: hidden" for="imageFile") Choose your logo
             
                 //- Changing the name of the text to file name
                 script.
@@ -101,3 +101,4 @@ block content
             div(class="form-row" id="row5")
                 div(class="form-group col-lg-4 offset-lg-8")
                     input(style="position: relative; height: 60px; width: 350px; background-color: #1D3557; color: white; border-radius: 10px; font-size: 190%; top: -3rem " type="submit" value="Create Item" id="submit")
+    script(src="/js/tooltip.js")

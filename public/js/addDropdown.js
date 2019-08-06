@@ -30,7 +30,7 @@ if(rowNum < 5) {
 addButton.style.cursor = 'pointer'
 addButton.onclick = function() {
     
-   
+    
     createDropdown();
     //Only allowing 3 different categories
     if(rowNum == 4) {
@@ -44,7 +44,7 @@ addButton.onclick = function() {
     rowNum+=1;
 
     //a hidden value that the server can read when the form is posted
-    categoryCount.value = Number(categoryCount.value + 1);
+    categoryCount.value = Number(categoryCount.value) + 1;
 }
 }
 
@@ -53,7 +53,7 @@ addButton.onclick = function() {
 function createDropdown() {
 
     //Getting the row to put the item in.
-    let rowNum = document.getElementById("row"+String(rowNum));
+    let row = document.getElementById("row"+String(rowNum));
  
     //Getting row below
     let nextRow = document.getElementById("row"+(Number(rowNum)+1));

@@ -78,7 +78,7 @@ function updateSubtotal() {
     
     for(i=0; i < pricesArray.length; i++){
         subtotal = subtotal + Number(pricesArray[i])
-        subtotal = Math.floor(subtotal*100) /100
+        subtotal = subtotal.toFixed(2)
     }
     $("#subtotal").html(subtotal)
 }

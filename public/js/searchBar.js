@@ -7,12 +7,13 @@ searchBar.addEventListener("keyup", function(event){
         event.preventDefault();
 
 
-       
+        //Getting the userID from a hidden htlm element
         let userID  = document.getElementById('userID').innerHTML
         let searchParams = searchBar.value
 
-            
+        //Performing an ajax get request, and sending the search terms as a query
         $.get("/" + userID + "/userHome?"+ searchParams , function(){
+                //Sending the 
                 window.location = "/" + userID + "/userHome?"+ searchParams
 
     })
