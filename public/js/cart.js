@@ -33,6 +33,7 @@ $(".qtyGroup")
             })
             .css('cursor', 'pointer') //doing css here instead of in style sheets
         .end()
+        //DOING THE EXACT SAME AS ABOVE
         .find(".minus")
             .mousedown(function(){
                 let qty = $(this).next().html() //Getting the qty of the item
@@ -67,8 +68,10 @@ $(".qtyGroup")
             .css('cursor', 'pointer')  //doing basic css here instead of style sheets
 
 
+//THIS IS RUN AFTER EVERY CLICK OF A BUTTON
 function updateSubtotal() {
 
+    //Pushing all the prices into an array off of the html
     let pricesArray = []
     $(".priceVal").each(function(){
         pricesArray.push($(this).html())
@@ -76,24 +79,33 @@ function updateSubtotal() {
 
     let subtotal = 0
     
+    //Calculating the subtotal
     for(i=0; i < pricesArray.length; i++){
         subtotal = subtotal + Number(pricesArray[i])
         subtotal = subtotal.toFixed(2)
     }
+    //Setting the subtotal on screen
     $("#subtotal").html(subtotal)
 }
 
 
-
+//Submitting the data to the server upon checkout
+//listening for a button which contains the word submit in its name
 $("a[name*='SUBMIT']").css('cursor', 'pointer').click(function(){
 
+    //Gets the shop id of of the submit buttons name
     let id = $(this).attr('name').split("S")[0] 
+    //Empty body object
     let data = {}
+    //assigning a property of that object to be an array
     data.qtys = []
+
+    //Pushes each qty value into an array so we can send it to server
     $(".qtyVAL").each(function(){
         data.qtys.push($(this).html())
     })
 
+    //Sending it to server 
     $.post('/'+id+'/checkout', data, function(){
         window.location = '/'+id+'/userHome'
     })

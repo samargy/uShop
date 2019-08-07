@@ -1,20 +1,20 @@
 
 
-//EDITING THE STOCK FUNCTION
+//EDITING THE STOCK FUNCTION MANUALLY
 $(".stockgroup")
         .find(".adder")
             .mousedown(function(){
-                let stockVal = $(this).next().html() //Getting the stock value
+                let stockVal = $(this).prev().html() //Getting the stock value
                 let increaseVal = Number(stockVal) + 1; //adding one to it
-                $(this).next().html(increaseVal) //setting it
+                $(this).prev().html(increaseVal) //setting it
             })
             .css('cursor', 'pointer').css('color','red') //doing css here instead of in style sheets
         .end()
         .find(".minus")
             .mousedown(function(){
-                let stockVal = $(this).prev().html() //Getting the stock value
+                let stockVal = $(this).next().html() //Getting the stock value
                 let increaseVal = Number(stockVal) - 1; //adding one to it
-                $(this).prev().html(increaseVal) //setting it
+                $(this).next().html(increaseVal) //setting it
             })
             .css('color', 'red').css('cursor', 'pointer')  //doing basic css here instead of style sheets
 

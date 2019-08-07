@@ -20,9 +20,9 @@ block content
                         div(class="card" style="max-width: 13rem")
                             a(href="/"+user._id+"/shopPage/"+shop._id)
                                 img(class="card-img-top" src="/photo-storage/"+shop.img alt="Card image cap" )
-                            div(class="card-body")
-                                b=shop.name
-                                p Category: #{shop.categories}
+                                div(class="card-body" style="color: black")
+                                    b=shop.name
+                                    p Category: #{shop.categories}
     div(id="userID" hidden)=user._id
     script(src="/js/searchBar.js")
 

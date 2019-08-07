@@ -11,8 +11,9 @@ block content
                                 a(href="/"+user._id+"/shopPage/"+shop._id)
                                     img(class="card-img-top" src="/photo-storage/"+shop.img alt="Card image cap" )
                                 div(class="card-body")
-                                    b=shop.name
-                                    p Category: #{shop.categories}
+                                    a(href="/"+user._id+"/shopPage/"+shop._id style="color: black")
+                                        b=shop.name
+                                        p Category: #{shop.categories}
                                     br
                                     a(href="/"+user._id+"/deleteBookmark/"+i style="color: red") Remove
                                         b(style="color:red")  &times;

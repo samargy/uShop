@@ -401,6 +401,7 @@ async function createUserAccount (req,res) {
     const data = req.body;
     //Searches if user with email already exists
     const userResult = await User.findOne({email: data.email})
+    const shopResult = await Shop.findOne({email: data.email})
     //Data validation
     if(data.email !== data.reEmail) {
         if(data.password !== data.rePassword) {
@@ -416,6 +417,10 @@ async function createUserAccount (req,res) {
     }
     //Tell the user the account already exits
     else if(userResult){
+        return res.redirect('userCreateAcc/alreadyExist')
+    }
+    //Tell the user the account already exits
+    else if(shopResult){
         return res.redirect('userCreateAcc/alreadyExist')
     }
 
@@ -1808,6 +1813,44 @@ function findItems() {
             //Here we query for 'Less than or equal to the date query'd since we are asking
             //for before
             stock_date: { $lte: conditions.stock_date },
+
+            // Here we query for both greater than or equal too AND less than and equal to
+            // this is so we can have a range. 
+            // retail_price_range[0] is the min and [1] is the max
+            // We do the same for all the other ranges
+            retail_price: {
+            $gte: conditions.retail_price_range[0],
+                $lte: conditions.retail_price_range[1]
+            },
+            buy_price: {
+            $gte: conditions.buy_price_range[0],
+                $lte: conditions.buy_price_range[1]
+            },
+            stock: {
+            $gte: conditions.buy_price_range[0],
+                $lte: conditions.buy_price_range[1]
+            },
+            minStock: {
+            $gte: conditions.minStock_range[0],
+                $lte: conditions.minStock_range[1]
+            },
+            eoq: {
+            $gte: conditions.eoq_range[0],
+                $lte: conditions.eoq_range[1]
+            }
+        });
+    }
+    //Doing the same as above just for 'after'
+    if ((conditions.stocked == 'after') && (data.name != '') && (data.category != '') && (data.manufacturer != '') && (data.stock_date != '') && (conditions.retail_price_range != ['', '']) && (conditions.buy_price_range != ['', '']) && (conditions.stock_range != ['', '']) && (conditions.minStock_range != ['', '']) && (conditions.eoq_range != ['', ''])) {
+        return Item.find({
+            shopId: id,
+            name: data.name,
+            category: data.category,
+            manufacturer: data.manufacturer,
+
+            //Here we query for 'greater than or equal to the date query'd since we are asking
+            //for after
+            stock_date: { $gte: conditions.stock_date },
 
             // Here we query for both greater than or equal too AND less than and equal to
             // this is so we can have a range. 
