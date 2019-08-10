@@ -1767,11 +1767,9 @@ async function findItems(req, res) {
     //Checking if the min and max are actually min and max for ALL the number fields.
     await minMaxValidation()
 
-
+    console.log(conditions)
     //Return all items in the shops inventory as an Array
-    // const itemsFound = await Item.find({shopId: id})
     const itemsFound = await findItems();
-
 
 
     //Figuring out how many items were found
@@ -1819,24 +1817,24 @@ function findItems() {
             // retail_price_range[0] is the min and [1] is the max
             // We do the same for all the other ranges
             retail_price: {
-            $gte: conditions.retail_price_range[0],
-                $lte: conditions.retail_price_range[1]
+            $gte: Number(conditions.retail_price_range[0]),
+                $lte: Number(conditions.retail_price_range[1])
             },
             buy_price: {
-            $gte: conditions.buy_price_range[0],
-                $lte: conditions.buy_price_range[1]
+            $gte: Number(conditions.buy_price_range[0]),
+                $lte: Number(conditions.buy_price_range[1])
             },
             stock: {
-            $gte: conditions.buy_price_range[0],
-                $lte: conditions.buy_price_range[1]
+            $gte: Number(conditions.buy_price_range[0]),
+                $lte: Number(conditions.buy_price_range[1])
             },
             minStock: {
-            $gte: conditions.minStock_range[0],
-                $lte: conditions.minStock_range[1]
+            $gte: Number(conditions.minStock_range[0]),
+                $lte: Number(conditions.minStock_range[1])
             },
             eoq: {
-            $gte: conditions.eoq_range[0],
-                $lte: conditions.eoq_range[1]
+            $gte: Number(conditions.eoq_range[0]),
+                $lte: Number(conditions.eoq_range[1])
             }
         });
     }
@@ -2117,7 +2115,7 @@ async function sales(req, res) {
     await calculateAppearCounts();
 
     //Sorting the rankings array so the top ranked items appear at the start
-    await selectionSort();
+    await selectionSort(rankings);
 
     //Calculating products sold
     let productsSold = 0;
@@ -2250,28 +2248,6 @@ async function sales(req, res) {
             let rankItem = [items[i]._id, appearCount, items[i].name];
             //pushes rank item onto the rankings array
             rankings.push(rankItem);
-        }
-    }
-
-    async function selectionSort() {
-        //Making length a variable for easy access
-        let n = rankings.length;
-        //Moving the boundary of the unsorted array
-        for (i = 0; i < n; i++) {
-            //Setting the current index of the max value to i.
-            let maxIndex = i;
-            //Find the greatest element in the unsorted array
-            for (j = i + 1; j < n; j++) {
-                //If the current element is greater than the max element then set the current element
-                //as the new max
-                if (rankings[j][1] > rankings[maxIndex][1]) {
-                    maxIndex = j;
-                }
-            }
-            //Swap current index with greatest element
-            let temp = rankings[i];
-            rankings[i] = rankings[maxIndex];
-            rankings[maxIndex] = temp;
         }
     }
     async function renderSales() {
@@ -2454,7 +2430,7 @@ function binarySearch(arr, id){
     //Sorting the whole array, this is important so we can return the element at an index in this
     //array after we do a binary search in an array of id's, to find the index in the idsArray
     idsArray.sort(function(a,b){return a-b})
-    
+
     //==============================
     //    START OF BINARY SEARCH
     //==============================
@@ -2543,6 +2519,32 @@ function groupShops(shops) {
     }
     return shopsGroupedArray;
 }
+
+//Selection sort algorithm
+async function selectionSort(arr) {
+    //Making length a variable for easy access
+    let n = arr.length;
+    //Moving the boundary of the unsorted array
+    for (i = 0; i < n; i++) {
+        //Setting the current index of the max value to i.
+        let maxIndex = i;
+        //Find the greatest element in the unsorted array
+        for (j = i + 1; j < n; j++) {
+            //If the current element is greater than the max element then set the current element
+            //as the new max
+            if (arr[j][1] > arr[maxIndex][1]) {
+                maxIndex = j;
+            }
+        }
+        //Swap current index with greatest element using a temp variable
+        let temp = arr[i];
+        arr[i] = arr[maxIndex];
+        arr[maxIndex] = temp;
+    }
+    return arr;
+}
+
+
 
 
 
