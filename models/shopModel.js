@@ -8,8 +8,7 @@ var shopSchema = new Schema ({
     password: String,
     img: String,
     itemCategories: Array,
-    manufacturers: Array,
-    balance: Number
+    manufacturers: Array
 });
 
 

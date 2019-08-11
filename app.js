@@ -1203,11 +1203,11 @@ async function shopHome(req, res) {
     const shops = await Shop.find();
 
     //Binary search function finds the shop
-    const binaryShop = binarySearch(shops, id);
+    const shop = binarySearch(shops, id);
 
     //Sending the shop and the ammount of categories to pug
     res.render('shopHome', {
-        shop: binaryShop,
+        shop: shop,
         categoryCount: binaryShop.categories.length
     });
 }
@@ -1217,11 +1217,11 @@ async function shopHomeErr(req, res) {
 
     const id = req.params.id;
 
-    //Searching for the shop and setting it as a variable
-    const shop = await Shop.findById(id);
+     //Searching for the shops and setting it as a variable
+     const shops = await Shop.find();
 
-    //Setting err to the err sent in the url
-    const err = req.params.err;
+     //Binary search function finds the shop
+     const shop = binarySearch(shops, id);
     
     //The following if statements determine sending varying
     //variables to the Pug file, which renders the page
@@ -1245,8 +1245,12 @@ async function shopHomeErr(req, res) {
 //Renders the shophome but with an updated message
 async function shopHomeUpdated(req, res) {
     const id = req.params.id;
-    //Searching for the shop and setting it as a variable 
-    const shop = await Shop.findById(id);
+
+     //Searching for the shops and setting it as a variable
+     const shops = await Shop.find();
+
+     //Binary search function finds the shop
+     const shop = binarySearch(shops, id);
 
     //Setting updated to true, so PUG displays a updated modal
     res.render('shopHome', {
